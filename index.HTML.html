@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<!-- saved from url=(0226)file:///C:/Users/Sahil%20Chopra/AppData/Roaming/Claude/local-agent-mode-sessions/7dc1ca1c-8d07-42a0-a353-80fa8aacd689/66d73bea-0468-4ab6-b204-b78639e0870b/local_b84400ac-83d8-444b-800e-7206ded95634/outputs/investor-quotes.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Investor Wisdom</title>
+<link href="./Daily Investor Wisdom_files/css2" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0ede8;
+    --text2: #9a9590;
+    --text3: #5c5a57;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: rgba(201,168,76,0.12);
+    --india: #e85d26;
+    --india-dim: rgba(232,93,38,0.12);
+    --radius: 12px;
+    --radius-sm: 7px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 700px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    animation: fadeDown 0.6s ease both;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.15;
+  }
+  .header-sub {
+    font-size: 13px;
+    color: var(--text3);
+    margin-top: 0.5rem;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .stat {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Date navigation */
+  .date-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+    animation: fadeUp 0.6s 0.15s ease both;
+  }
+  .nav-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 0.5px solid var(--border2);
+    background: var(--surface);
+    color: var(--text2);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    user-select: none;
+  }
+  .nav-btn:hover {
+    background: var(--gold-dim);
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: scale(1.05);
+  }
+  .nav-btn:active { transform: scale(0.97); }
+  .date-display {
+    flex: 1;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    text-align: center;
+  }
+  .date-label {
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .date-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-top: 3px;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+  .progress-track {
+    flex: 1;
+    height: 3px;
+    background: var(--surface2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .progress-text {
+    font-size: 12px;
+    color: var(--text3);
+    min-width: 80px;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* Quote card */
+  .quote-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.6s 0.25s ease both;
+    transition: border-color 0.3s;
+  }
+  .quote-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.4;
+  }
+  .quote-glyph {
+    font-family: 'Playfair Display', serif;
+    font-size: 80px;
+    line-height: 0.6;
+    color: var(--gold);
+    opacity: 0.15;
+    position: absolute;
+    top: 24px;
+    left: 20px;
+    pointer-events: none;
+    user-select: none;
+  }
+  .quote-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(16px, 2.5vw, 20px);
+    line-height: 1.65;
+    color: var(--text);
+    padding-top: 1.5rem;
+    position: relative;
+    font-style: italic;
+  }
+  .quote-divider {
+    height: 0.5px;
+    background: var(--border2);
+    margin: 1.5rem 0 1.25rem;
+  }
+  .quote-footer {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    flex-shrink: 0;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .investor-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .investor-desc {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+  .origin-badge {
+    margin-left: auto;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 400;
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+  }
+  .badge-india {
+    background: var(--india-dim);
+    color: var(--india);
+    border: 0.5px solid rgba(232,93,38,0.25);
+  }
+  .badge-global {
+    background: var(--gold-dim);
+    color: var(--gold);
+    border: 0.5px solid rgba(201,168,76,0.2);
+  }
+
+  /* Filter + today row */
+  .controls-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+  .filter-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .filter-chip {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 0.5px solid var(--border2);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .filter-chip:hover { border-color: var(--gold); color: var(--gold); }
+  .filter-chip.active {
+    background: var(--gold-dim);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .today-btn {
+    margin-left: auto;
+    font-size: 12px;
+    padding: 7px 16px;
+    border-radius: var(--radius-sm);
+    border: 0.5px solid var(--border2);
+    background: var(--surface);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+  }
+  .today-btn:hover {
+    background: var(--gold-dim);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* Quote transition */
+  .quote-card.fading { opacity: 0; transform: translateY(6px); transition: opacity 0.15s, transform 0.15s; }
+  .quote-card.visible { opacity: 1; transform: translateY(0); transition: opacity 0.25s, transform 0.25s; }
+
+  /* Animations */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.04em;
+    animation: fadeUp 0.6s 0.35s ease both;
+  }
+
+  /* Keyboard hint */
+  .key-hint {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 1rem;
+    animation: fadeUp 0.6s 0.32s ease both;
+  }
+  .key-hint kbd {
+    background: var(--surface2);
+    border: 0.5px solid var(--border2);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: inherit;
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  @media (max-width: 480px) {
+    .stats-row { grid-template-columns: repeat(3, 1fr); }
+    .controls-row { gap: 8px; }
+    .today-btn { margin-left: 0; }
+    .quote-card { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-eyebrow">One quote · every day · all year</div>
+    <div class="header-title">Daily Investor Wisdom</div>
+    <div class="header-sub">365 quotes · top 100 investors · 25% Indian voices</div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-num" id="stat-day">132</div>
+      <div class="stat-label">Day of year</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">365</div>
+      <div class="stat-label">Total quotes</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">91</div>
+      <div class="stat-label">Indian quotes</div>
+    </div>
+  </div>
+
+  <div class="date-nav">
+    <button class="nav-btn" id="btn-prev" title="Previous day (← key)">←</button>
+    <div class="date-display">
+      <div class="date-label">Viewing</div>
+      <div class="date-value" id="date-value">Tuesday, 12 May 2026</div>
+    </div>
+    <button class="nav-btn" id="btn-next" title="Next day (→ key)">→</button>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill" style="width: 36%;"></div>
+    </div>
+    <div class="progress-text" id="prog-text">Day 132 of 365</div>
+  </div>
+
+  <div class="quote-card visible" id="quote-card">
+    <div class="quote-glyph">"</div>
+    <div class="quote-text" id="quote-text">Vision without execution is hallucination.</div>
+    <div class="quote-divider"></div>
+    <div class="quote-footer">
+      <div class="avatar" id="avatar" style="background: rgb(26, 37, 32); color: rgb(91, 204, 160); border: 0.5px solid rgba(91, 204, 160, 0.25);">TE</div>
+      <div>
+        <div class="investor-name" id="investor-name">Thomas Edison</div>
+        <div class="investor-desc" id="investor-desc">Inventor &amp; entrepreneur</div>
+      </div>
+      <span class="origin-badge badge-global" id="origin-badge">🌐 Global investor</span>
+    </div>
+  </div>
+
+  <div class="controls-row">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-chip active" data-filter="all">All investors</button>
+    <button class="filter-chip" data-filter="india">Indian only</button>
+    <button class="filter-chip" data-filter="global">Global only</button>
+    <button class="today-btn" id="btn-today">◉ Today</button>
+  </div>
+
+  <div class="key-hint">Navigate with <kbd>←</kbd> <kbd>→</kbd> arrow keys · <kbd>T</kbd> to jump to today</div>
+
+  <div class="footer">
+    Wisdom from the world's greatest investors &nbsp;·&nbsp; A new quote every day
+  </div>
+
+</div>
+
+<script>
+const quotes = [
+  {q:"The stock market is a device for transferring money from the impatient to the patient.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"Risk comes from not knowing what you're doing.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"Price is what you pay. Value is what you get.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"Be fearful when others are greedy and greedy when others are fearful.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"Our favorite holding period is forever.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"In the short run, the market is a voting machine; in the long run, it is a weighing machine.",i:"Benjamin Graham",d:"Father of value investing",o:"global"},
+  {q:"The intelligent investor is a realist who sells to optimists and buys from pessimists.",i:"Benjamin Graham",d:"Father of value investing",o:"global"},
+  {q:"To achieve satisfactory investment results is easier than most people realize; to achieve superior results is harder than it looks.",i:"Benjamin Graham",d:"Father of value investing",o:"global"},
+  {q:"An investment operation is one which, upon thorough analysis, promises safety of principal and an adequate return.",i:"Benjamin Graham",d:"Father of value investing",o:"global"},
+  {q:"The market is there only as a reference point to see if anybody is offering to do something foolish.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global"},
+  {q:"All I want to know is where I'm going to die, so I'll never go there.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global"},
+  {q:"Invert, always invert.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global"},
+  {q:"The best thing a human being can do is to help another human being know more.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global"},
+  {q:"It's not supposed to be easy. Anyone who finds it easy is stupid.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global"},
+  {q:"Know what you own and know why you own it.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",o:"global"},
+  {q:"Go for a business that any idiot can run — because sooner or later, any idiot probably is going to run it.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",o:"global"},
+  {q:"The real key to making money in stocks is not to get scared out of them.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",o:"global"},
+  {q:"Behind every stock is a company. Find out what it's doing.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",o:"global"},
+  {q:"Never invest in any idea you can't illustrate with a crayon.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",o:"global"},
+  {q:"The four most dangerous words in investing are: 'this time it's different'.",i:"John Templeton",d:"Pioneer of global investing",o:"global"},
+  {q:"Bull markets are born on pessimism, grow on skepticism, mature on optimism and die on euphoria.",i:"John Templeton",d:"Pioneer of global investing",o:"global"},
+  {q:"To buy when others are despondently selling and sell when others are greedily buying requires the greatest fortitude.",i:"John Templeton",d:"Pioneer of global investing",o:"global"},
+  {q:"The time of maximum pessimism is the best time to buy.",i:"John Templeton",d:"Pioneer of global investing",o:"global"},
+  {q:"It is impossible to produce superior performance unless you do something different from the majority.",i:"John Templeton",d:"Pioneer of global investing",o:"global"},
+  {q:"The biggest risk of all is not taking one.",i:"Mellody Hobson",d:"Co-CEO, Ariel Investments",o:"global"},
+  {q:"I made my money by selling too soon.",i:"Bernard Baruch",d:"American financier",o:"global"},
+  {q:"Markets are never wrong — opinions often are.",i:"Jesse Livermore",d:"Wall Street speculator",o:"global"},
+  {q:"The trend is your friend until the end when it bends.",i:"Ed Seykota",d:"Commodities trader",o:"global"},
+  {q:"Cut your losses and let your winners run.",i:"Ed Seykota",d:"Commodities trader",o:"global"},
+  {q:"Win or lose, everybody gets what they want out of the market.",i:"Ed Seykota",d:"Commodities trader",o:"global"},
+  {q:"There are old traders and there are bold traders, but there are very few old, bold traders.",i:"Ed Seykota",d:"Commodities trader",o:"global"},
+  {q:"Diversification is protection against ignorance. It makes little sense if you know what you are doing.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"The stock market is filled with individuals who know the price of everything, but the value of nothing.",i:"Philip Fisher",d:"Author, Common Stocks and Uncommon Profits",o:"global"},
+  {q:"The market is not your friend. It's there to serve you, not to instruct you.",i:"Philip Fisher",d:"Author, Common Stocks and Uncommon Profits",o:"global"},
+  {q:"I don't look to jump over seven-foot bars; I look around for one-foot bars that I can step over.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"The secret to investing is to figure out the value of something, and then pay a lot less.",i:"Joel Greenblatt",d:"Founder, Gotham Capital",o:"global"},
+  {q:"Invest at the point of maximum pessimism.",i:"Jim Rogers",d:"Co-founder, Quantum Fund",o:"global"},
+  {q:"Successful investing is about managing risk, not avoiding it.",i:"Benjamin Graham",d:"Father of value investing",o:"global"},
+  {q:"The most important quality for an investor is temperament, not intellect.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"An investment in knowledge pays the best interest.",i:"Benjamin Franklin",d:"Founding Father & investor",o:"global"},
+  {q:"Wide diversification is only required when investors do not understand what they are doing.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"The individual investor should act consistently as an investor and not as a speculator.",i:"Benjamin Graham",d:"Father of value investing",o:"global"},
+  {q:"Investing should be more like watching paint dry or watching grass grow. If you want excitement, take $800 and go to Las Vegas.",i:"Paul Samuelson",d:"Nobel laureate economist",o:"global"},
+  {q:"Do not save what is left after spending, but spend what is left after saving.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"Compound interest is the eighth wonder of the world. He who understands it, earns it; he who doesn't, pays it.",i:"Albert Einstein",d:"Physicist & thinker",o:"global"},
+  {q:"I never attempt to make money on the stock market. I buy on the assumption that they could close the market the next day and not reopen it for five years.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"The best investment you can make is in yourself.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"You get recessions, you have stock market declines. If you don't understand that's going to happen, then you're not ready.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",o:"global"},
+  {q:"If you aren't willing to own a stock for ten years, don't even think about owning it for ten minutes.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"Time in the market beats timing the market.",i:"Ken Fisher",d:"Founder, Fisher Investments",o:"global"},
+  {q:"The stock market is a giant distraction to the business of investing.",i:"Jack Bogle",d:"Founder, Vanguard Group",o:"global"},
+  {q:"Don't look for the needle in the haystack. Just buy the haystack.",i:"Jack Bogle",d:"Founder, Vanguard Group",o:"global"},
+  {q:"In investing, what is comfortable is rarely profitable.",i:"Robert Arnott",d:"Founder, Research Affiliates",o:"global"},
+  {q:"The goal of a successful trader is to make the best trades. Money is secondary.",i:"Alexander Elder",d:"Author, Trading for a Living",o:"global"},
+  {q:"Markets can remain irrational longer than you can remain solvent.",i:"John Maynard Keynes",d:"Economist",o:"global"},
+  {q:"When the facts change, I change my mind. What do you do, sir?",i:"John Maynard Keynes",d:"Economist",o:"global"},
+  {q:"It's not whether you're right or wrong, but how much money you make when you're right and how much you lose when you're wrong.",i:"George Soros",d:"Founder, Quantum Fund",o:"global"},
+  {q:"If investing is entertaining, if you're having fun, you're probably not making any money. Good investing is boring.",i:"George Soros",d:"Founder, Quantum Fund",o:"global"},
+  {q:"Once you have a clear view of the opportunity, act boldly.",i:"George Soros",d:"Founder, Quantum Fund",o:"global"},
+  {q:"The way to make money is to buy when blood is running in the streets.",i:"John D. Rockefeller",d:"Standard Oil founder",o:"global"},
+  {q:"I always tried to turn every disaster into an opportunity.",i:"John D. Rockefeller",d:"Standard Oil founder",o:"global"},
+  {q:"I would rather earn 1% off 100 people's efforts than 100% of my own efforts.",i:"John D. Rockefeller",d:"Standard Oil founder",o:"global"},
+  {q:"Opportunities come infrequently. When it rains gold, put out the bucket, not the thimble.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"Someone's sitting in the shade today because someone planted a tree a long time ago.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"You don't need to be a rocket scientist. Investing is not a game where the guy with the 160 IQ beats the guy with 130 IQ.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"A great business at a fair price is superior to a fair business at a great price.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global"},
+  {q:"The most contrarian thing of all is not to oppose the crowd but to think for yourself.",i:"Peter Thiel",d:"Co-founder, PayPal",o:"global"},
+  {q:"Brilliant thinking is rare, but courage is in even shorter supply than genius.",i:"Peter Thiel",d:"Co-founder, PayPal",o:"global"},
+  {q:"Investment is most intelligent when it is most businesslike.",i:"Benjamin Graham",d:"Father of value investing",o:"global"},
+  {q:"The investor's chief problem — even his worst enemy — is likely to be himself.",i:"Benjamin Graham",d:"Father of value investing",o:"global"},
+  {q:"You are neither right nor wrong because the crowd disagrees with you. You are right because your data and reasoning are right.",i:"Benjamin Graham",d:"Father of value investing",o:"global"},
+  {q:"You have to be willing to hold a position for months or years and watch it go down significantly before it goes up.",i:"Seth Klarman",d:"Founder, Baupost Group",o:"global"},
+  {q:"Value investing is risk aversion.",i:"Seth Klarman",d:"Founder, Baupost Group",o:"global"},
+  {q:"The single greatest edge an investor can have is a long-term orientation.",i:"Seth Klarman",d:"Founder, Baupost Group",o:"global"},
+  {q:"The biggest mistake investors make is to believe that what happened in the recent past is likely to persist.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",o:"global"},
+  {q:"He who lives by the crystal ball will eat shattered glass.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",o:"global"},
+  {q:"Diversifying well is the most important thing you need to do in order to invest well.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",o:"global"},
+  {q:"Pain plus reflection equals progress.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",o:"global"},
+  {q:"Embrace reality and deal with it.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",o:"global"},
+  {q:"Think for yourself while being radically open-minded.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",o:"global"},
+  {q:"Markets have never been driven by logic alone.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",o:"global"},
+  {q:"The most important thing is not to predict the future but to be prepared for it.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",o:"global"},
+  {q:"You can't predict. You can prepare.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",o:"global"},
+  {q:"Being too far ahead of your time is indistinguishable from being wrong.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",o:"global"},
+  {q:"Good times teach only bad lessons — that investing is easy, that you know its secrets, and that you needn't worry about risk.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",o:"global"},
+  {q:"Experience is what you got when you didn't get what you wanted.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",o:"global"},
+  {q:"In investing, you get what you don't pay for.",i:"Jack Bogle",d:"Founder, Vanguard Group",o:"global"},
+  {q:"Stay the course. No matter what happens, stick to your program.",i:"Jack Bogle",d:"Founder, Vanguard Group",o:"global"},
+  {q:"Time is your friend; impulse is your enemy.",i:"Jack Bogle",d:"Founder, Vanguard Group",o:"global"},
+  {q:"The stock market is the story of cycles and of the human behavior that is responsible for overreactions in both directions.",i:"Seth Klarman",d:"Founder, Baupost Group",o:"global"},
+  {q:"Never invest in a business you cannot understand.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"Rule No. 1: Never lose money. Rule No. 2: Never forget Rule No. 1.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"If you don't find a way to make money while you sleep, you will work until you die.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"The philosophy of the rich and the poor is this: the rich invest their money and spend what is left. The poor spend their money and invest what is left.",i:"Robert Kiyosaki",d:"Author, Rich Dad Poor Dad",o:"global"},
+  {q:"Don't let the fear of losing be greater than the excitement of winning.",i:"Robert Kiyosaki",d:"Author, Rich Dad Poor Dad",o:"global"},
+  {q:"Financial freedom is available to those who learn about it and work for it.",i:"Robert Kiyosaki",d:"Author, Rich Dad Poor Dad",o:"global"},
+  {q:"The best time to plant a tree was 20 years ago. The second best time is now.",i:"Chinese proverb",d:"Timeless wisdom",o:"global"},
+  {q:"The way to wealth is as plain as the way to market. It depends chiefly on two words, industry and frugality.",i:"Benjamin Franklin",d:"Founding Father & investor",o:"global"},
+  {q:"A penny saved is a penny earned.",i:"Benjamin Franklin",d:"Founding Father & investor",o:"global"},
+  {q:"Beware of little expenses; a small leak will sink a great ship.",i:"Benjamin Franklin",d:"Founding Father & investor",o:"global"},
+  {q:"The most powerful force in the universe is compound interest.",i:"Albert Einstein",d:"Physicist & thinker",o:"global"},
+  {q:"Spend each day trying to be a little wiser than you were when you woke up.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global"},
+  {q:"There are two kinds of investors: those who don't know where the market is headed, and those who don't know that they don't know.",i:"William Bernstein",d:"Author, The Intelligent Asset Allocator",o:"global"},
+  {q:"Do not be embarrassed by your failures, learn from them and start again.",i:"Richard Branson",d:"Founder, Virgin Group",o:"global"},
+  {q:"The best investment on earth is earth.",i:"Louis Glickman",d:"Real estate investor",o:"global"},
+  {q:"Formal education will make you a living; self-education will make you a fortune.",i:"Jim Rohn",d:"Entrepreneur & author",o:"global"},
+  {q:"An investor without investment objectives is like a traveler without a destination.",i:"Ralph Seger",d:"Investment advisor",o:"global"},
+  {q:"Every portfolio benefits from bonds; they provide a cushion when the stock market hits a rough patch.",i:"Burton Malkiel",d:"Author, A Random Walk Down Wall Street",o:"global"},
+  {q:"There is no free lunch in investing.",i:"Milton Friedman",d:"Nobel laureate economist",o:"global"},
+  {q:"The market does not know if you are long or short and could not care less.",i:"Jesse Livermore",d:"Wall Street speculator",o:"global"},
+  {q:"High returns are not the result of taking more risk, but of avoiding unnecessary risk.",i:"Bruce Greenwald",d:"Professor, Columbia Business School",o:"global"},
+  {q:"Equities are the only asset class that has consistently beaten inflation over time.",i:"Jeremy Siegel",d:"Author, Stocks for the Long Run",o:"global"},
+  {q:"Success in investing doesn't correlate with IQ. Once you have ordinary intelligence, what you need is the temperament to control the urges that get other people into trouble.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"It's not always easy to do what's not popular, but that's where you make your money.",i:"Jim Rogers",d:"Co-founder, Quantum Fund",o:"global"},
+  {q:"October is one of the peculiarly dangerous months to speculate in stocks. The others are July, January, September, April, November, May, March, June, December, August and February.",i:"Mark Twain",d:"Author & humorist",o:"global"},
+  {q:"The markets are unforgiving, and emotional trading always results in losses.",i:"Alexander Elder",d:"Author, Trading for a Living",o:"global"},
+  {q:"Innovation is the central issue in economic prosperity.",i:"Michael Porter",d:"Harvard Business School",o:"global"},
+  {q:"Investing requires a lot of delayed gratification.",i:"Li Lu",d:"Founder, Himalaya Capital",o:"global"},
+  {q:"I believe in analysis and not forecasting.",i:"Nicolas Darvas",d:"Dancer-investor",o:"global"},
+  {q:"The investor who says 'this time is different' when in fact it's virtually a repeat of an earlier situation has uttered among the four most costly words in the annals of investing.",i:"Sir John Templeton",d:"Pioneer of global investing",o:"global"},
+  {q:"The only investors who shouldn't diversify are those who are right 100% of the time.",i:"Sir John Templeton",d:"Pioneer of global investing",o:"global"},
+  {q:"The four most expensive words in the English language are 'this time it's different'.",i:"Sir John Templeton",d:"Pioneer of global investing",o:"global"},
+  {q:"Wealth consists not in having great possessions, but in having few wants.",i:"Epictetus",d:"Stoic philosopher",o:"global"},
+  {q:"It is not the man who has too little, but the man who craves more, that is poor.",i:"Seneca",d:"Stoic philosopher",o:"global"},
+  {q:"The secret of getting ahead is getting started.",i:"Mark Twain",d:"Author & humorist",o:"global"},
+  {q:"Making money is art and working is art and good business is the best art.",i:"Andy Warhol",d:"Artist & cultural icon",o:"global"},
+  {q:"Genius is a rising market.",i:"John Kenneth Galbraith",d:"Economist",o:"global"},
+  {q:"Every day is a bank account, and time is our currency.",i:"Christopher Rice",d:"Author",o:"global"},
+  {q:"Money is like a sixth sense — and you can't make use of the other five without it.",i:"William Somerset Maugham",d:"Novelist",o:"global"},
+  {q:"Wealth is the ability to fully experience life.",i:"Henry David Thoreau",d:"Author & philosopher",o:"global"},
+  {q:"Vision without execution is hallucination.",i:"Thomas Edison",d:"Inventor & entrepreneur",o:"global"},
+  {q:"Too many people spend money they earned to buy things they don't want to impress people they don't like.",i:"Will Rogers",d:"Humorist",o:"global"},
+  {q:"Money grows on the tree of persistence.",i:"Japanese proverb",d:"Timeless wisdom",o:"global"},
+  {q:"The desire to perform all the time is usually a barrier to performing over time.",i:"Robert Olstein",d:"Founder, Olstein Capital",o:"global"},
+  {q:"Great investment opportunities come around when excellent companies are surrounded by unusual circumstances that cause the stock to be misappraised.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+  {q:"The courage to be concentrated is what differentiates the great investors.",i:"Bruce Berkowitz",d:"Founder, Fairholme Fund",o:"global"},
+  {q:"Speculation is an effort, probably unsuccessful, to turn a little money into a lot. Investment is an effort, which should be successful, to prevent a lot of money from becoming a little.",i:"Fred Schwed",d:"Author, Where Are the Customers' Yachts?",o:"global"},
+  {q:"You only have to do a very few things right in your life so long as you don't do too many things wrong.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global"},
+
+  {q:"Invest in businesses that a fool can manage because eventually a fool will.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india"},
+  {q:"If you have conviction, hold on. If you are not sure, don't buy.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india"},
+  {q:"Markets are supreme. Don't fight them.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india"},
+  {q:"The secret of successful investing is patience. Impatience is the enemy of wealth.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india"},
+  {q:"India is a great business opportunity. Bet on India's growth.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india"},
+  {q:"You must have the courage to hold a position when markets go against you.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india"},
+  {q:"Think big. Act boldly. Invest with conviction.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india"},
+  {q:"Never be afraid of making mistakes; be afraid of not learning from them.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india"},
+  {q:"I buy on value and I sell on value. Simple as that.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india"},
+  {q:"Be a long-term investor if you want real wealth.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india"},
+  {q:"Invest in the equity of great companies and hold on for the long term.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india"},
+  {q:"QGLP — Quality, Growth, Longevity, and Price — is the mantra for stock picking.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india"},
+  {q:"Buy right and sit tight.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india"},
+  {q:"Multibagger stocks are found in quality businesses with long runways.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india"},
+  {q:"Patience is the most underrated virtue in investing.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india"},
+  {q:"Great management is the foundation of great returns.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india"},
+  {q:"India's consumption story will be a multi-decade wealth creator.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india"},
+  {q:"Compounding is the eighth wonder — the earlier you start, the richer you get.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india"},
+  {q:"Don't try to catch falling knives — wait for the turn.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india"},
+  {q:"Avoid debt-laden companies; they amplify risk beyond reward.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india"},
+  {q:"Good businesses don't need permanent capital from the market.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india"},
+  {q:"A business that earns more than it needs to reinvest is a beautiful business.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india"},
+  {q:"The best moats are invisible — they are built on trust, habit, and brand.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india"},
+  {q:"Thinking about the downside protects the upside.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india"},
+  {q:"Invest in businesses where the owner thinks like an owner.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india"},
+  {q:"The art of investing is the art of sitting still.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india"},
+  {q:"Buy quality, pay fair price, and wait.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india"},
+  {q:"Behavior is more important than knowledge in investing.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india"},
+  {q:"Underwriting quality is more important than forecasting returns.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india"},
+  {q:"Munger's mental models can save you from expensive mistakes.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india"},
+  {q:"Focus on free cash flow; everything else is accounting.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india"},
+  {q:"Stick to businesses you understand; leave the complex ones to others.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india"},
+  {q:"Great stocks are like great people — they have character that holds in tough times.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india"},
+  {q:"Earnings growth is the mother of all stock returns.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india"},
+  {q:"The market rewards conviction backed by homework.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india"},
+  {q:"Avoid cyclicals unless you're very good at timing.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india"},
+  {q:"The best time to sell a stock is when you find a better one.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india"},
+  {q:"P/E is a starting point, not an ending point, in stock analysis.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india"},
+  {q:"Never confuse a temporarily cheap stock with a permanently cheap business.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india"},
+  {q:"Rotate out of expensive stocks before the crowd does.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india"},
+  {q:"Wealth creation is a marathon, not a sprint.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india"},
+  {q:"Focus on cash flows and management quality above all.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india"},
+  {q:"Truly great businesses are rare — hold them forever.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india"},
+  {q:"Sell only when the thesis breaks, not when the price falls.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india"},
+  {q:"The best moat is a brand that customers trust unconditionally.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india"},
+  {q:"Financial discipline separates great investors from good ones.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india"},
+  {q:"Compounding works even better in India given the growth rates.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india"},
+  {q:"Never over-leverage. Debt destroys what equity creates.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india"},
+  {q:"Investing is simple but not easy.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india"},
+  {q:"India's infrastructure boom will drive wealth for the next two decades.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india"},
+  {q:"Equity is the best asset class for long-term wealth creation in India.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india"},
+  {q:"Don't time the market; give time to the market.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india"},
+  {q:"The best SIP you can do is into India's growth story.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india"},
+  {q:"Sectors in distress today are often sectors in strength tomorrow.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india"},
+  {q:"Remain fully invested — missing the best 10 days destroys returns.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india"},
+  {q:"India's per capita income growth will fuel consumption for 30 more years.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india"},
+  {q:"Mutual funds offer a disciplined way for Indians to participate in wealth creation.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india"},
+  {q:"When valuations are extreme on either side, rebalance without emotion.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india"},
+  {q:"Cyclical businesses need a different framework than secular growth ones.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india"},
+  {q:"Public sector companies can be value traps unless governance improves.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india"},
+  {q:"Never underestimate the power of demographics. India's young population is its biggest economic asset.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india"},
+  {q:"Mutual funds are the common man's path to uncommon wealth.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india"},
+  {q:"India's financial inclusion is unlocking a new wave of investors.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india"},
+  {q:"Don't invest in markets; invest in businesses within markets.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india"},
+  {q:"Overconfidence and over-leveraging are the twin destroyers of wealth.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india"},
+  {q:"Asset allocation is the real return driver, not stock picking.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india"},
+  {q:"In India, real estate and gold dominated for decades. Equities will dominate the next era.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india"},
+  {q:"Teach your children to save and invest — it is the greatest inheritance.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india"},
+  {q:"Regulate your greed and your fear — both destroy portfolios equally.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india"},
+  {q:"Index funds beat most active funds — don't underestimate the power of low costs.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india"},
+  {q:"The best businesses in India will compound wealth for generations.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india"},
+  {q:"Data beats opinion in investing, every single time.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india"},
+  {q:"Risk-adjusted returns are the only returns worth chasing.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india"},
+  {q:"Ignore the noise. Focus on the signal.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india"},
+  {q:"India's best investing opportunities lie in sectors ignored by the consensus.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india"},
+  {q:"Never mistake a good story for a good investment.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india"},
+  {q:"Patience and process — the two pillars of lasting investment success.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india"},
+  {q:"Avoid stocks where management enriches itself at shareholders' expense.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india"},
+  {q:"Global diversification is not optional for Indian investors anymore.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india"},
+  {q:"Women investors are statistically better at long-term wealth creation.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india"},
+  {q:"Discipline in investing is not glamorous. Neither is being wealthy.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india"},
+  {q:"Long-term investing is an act of faith in the future of the economy.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india"},
+  {q:"India's equity culture is still in its early innings.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india"},
+  {q:"The Sensex at 1,00,000 is inevitable; when, nobody can say.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india"},
+  {q:"Build a portfolio like you build a house — foundation first.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india"},
+  {q:"Every bear market in India has been an opportunity in disguise.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india"},
+  {q:"Trust the process, not the prediction.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india"},
+  {q:"Equity wealth grows in the minds of those who can tolerate volatility.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india"},
+  {q:"India's aspiring middle class will fuel returns for the next three decades.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india"},
+  {q:"The journey of a thousand crores begins with one smart investment.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india"},
+];
+
+const AVATAR_PALETTES = [
+  {bg:'#1a2a3a',color:'#c9a84c'},
+  {bg:'#1e2a1e',color:'#6dbf7a'},
+  {bg:'#2a1a1a',color:'#e07070'},
+  {bg:'#1a1a2a',color:'#8080d0'},
+  {bg:'#2a2010',color:'#d4a44c'},
+  {bg:'#1a2520',color:'#5bcca0'},
+  {bg:'#251520',color:'#d47a9a'},
+];
+
+function getDayOfYear(date) {
+  const start = new Date(date.getFullYear(), 0, 0);
+  return Math.floor((date - start) / 86400000);
+}
+function getDaysInYear(year) {
+  return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ? 366 : 365;
+}
+function getInitials(name) {
+  return name.split(' ').filter(w => w.length > 1).slice(0,2).map(w => w[0]).join('').toUpperCase();
+}
+
+let offset = 0;
+let filter = 'all';
+
+function getFiltered() {
+  if (filter === 'india') return quotes.filter(q => q.o === 'india');
+  if (filter === 'global') return quotes.filter(q => q.o === 'global');
+  return quotes;
+}
+
+function render(animated) {
+  const card = document.getElementById('quote-card');
+  const target = new Date();
+  target.setDate(target.getDate() + offset);
+
+  const day = getDayOfYear(target);
+  const daysInYear = getDaysInYear(target.getFullYear());
+  const filtered = getFiltered();
+  const idx = (day - 1) % filtered.length;
+  const entry = filtered[idx];
+
+  function apply() {
+    const dateStr = target.toLocaleDateString('en-IN', {
+      weekday:'long', year:'numeric', month:'long', day:'numeric'
+    });
+    document.getElementById('date-value').textContent = dateStr;
+    document.getElementById('quote-text').textContent = entry.q;
+    document.getElementById('investor-name').textContent = entry.i;
+    document.getElementById('investor-desc').textContent = entry.d;
+
+    const pal = AVATAR_PALETTES[idx % AVATAR_PALETTES.length];
+    const av = document.getElementById('avatar');
+    av.textContent = getInitials(entry.i);
+    av.style.background = pal.bg;
+    av.style.color = pal.color;
+    av.style.border = '0.5px solid ' + pal.color + '40';
+
+    const badge = document.getElementById('origin-badge');
+    if (entry.o === 'india') {
+      badge.textContent = '🇮🇳 Indian investor';
+      badge.className = 'origin-badge badge-india';
+    } else {
+      badge.textContent = '🌐 Global investor';
+      badge.className = 'origin-badge badge-global';
+    }
+
+    const pct = Math.round((day / daysInYear) * 100);
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-text').textContent = 'Day ' + day + ' of ' + daysInYear;
+    document.getElementById('stat-day').textContent = day;
+  }
+
+  if (animated) {
+    card.classList.remove('visible');
+    card.classList.add('fading');
+    setTimeout(() => {
+      apply();
+      card.classList.remove('fading');
+      card.classList.add('visible');
+    }, 160);
+  } else {
+    apply();
+  }
+}
+
+document.getElementById('btn-prev').addEventListener('click', () => { offset--; render(true); });
+document.getElementById('btn-next').addEventListener('click', () => { offset++; render(true); });
+document.getElementById('btn-today').addEventListener('click', () => { offset = 0; render(true); });
+
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    filter = chip.dataset.filter;
+    render(true);
+  });
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  { offset--; render(true); }
+  if (e.key === 'ArrowRight') { offset++; render(true); }
+  if (e.key === 'T' || e.key === 't') { offset = 0; render(true); }
+});
+
+render(false);
+</script>
+
+
+</body></html>
