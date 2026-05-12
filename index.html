@@ -7,581 +7,560 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Investor Wisdom">
 <title>Investor Wisdom</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:ital,wght@0,400;1,400&family=Lora:ital,wght@0,400;1,400&family=Merriweather:ital,wght@0,300;1,300&family=EB+Garamond:ital,wght@0,400;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Jost', sans-serif; background: #000; user-select: none; }
 
-html, body {
-  width: 100%; height: 100%;
-  overflow: hidden;
-  font-family: 'Jost', sans-serif;
-  background: #000;
-  user-select: none;
-}
+#bg { position: fixed; inset: 0; background-size: cover; background-position: center; transition: background 1s ease; z-index: 0; }
+#overlay { position: fixed; inset: 0; z-index: 1; transition: background 1s ease; }
 
-/* Background gradient that changes per quote */
-#bg {
-  position: fixed;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  transition: background 1.2s ease;
-  z-index: 0;
-}
-
-/* Dark overlay for readability */
-#overlay {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.25) 0%,
-    rgba(0,0,0,0.45) 40%,
-    rgba(0,0,0,0.65) 80%,
-    rgba(0,0,0,0.8) 100%
-  );
-  z-index: 1;
-}
-
-/* Main content */
 #app {
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: env(safe-area-inset-top, 48px) 32px env(safe-area-inset-bottom, 40px);
+  position: fixed; inset: 0; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  padding: env(safe-area-inset-top, 48px) 28px env(safe-area-inset-bottom, 36px);
 }
 
-/* Top bar */
-.top-bar {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 8px;
-}
-.app-name {
-  font-family: 'Jost', sans-serif;
-  font-size: 13px;
-  font-weight: 300;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.7);
-}
-.date-pill {
-  font-size: 11px;
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.6);
-  background: rgba(255,255,255,0.12);
-  border: 0.5px solid rgba(255,255,255,0.2);
-  border-radius: 999px;
-  padding: 4px 12px;
-}
+.top-bar { width: 100%; display: flex; align-items: center; justify-content: space-between; padding-top: 8px; }
+.app-name { font-size: 12px; font-weight: 300; letter-spacing: 0.22em; text-transform: uppercase; transition: color 0.4s; }
+.top-right { display: flex; align-items: center; gap: 10px; }
+.date-pill { font-size: 11px; font-weight: 300; letter-spacing: 0.08em; border-radius: 999px; padding: 4px 12px; border: 0.5px solid; transition: all 0.4s; }
+.settings-btn { width: 34px; height: 34px; border-radius: 50%; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 0.5px solid; transition: all 0.2s; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.settings-btn:active { transform: scale(0.92); }
 
-/* Quote area — center of screen */
-.quote-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0 8px;
-  max-width: 520px;
-  width: 100%;
-}
+.quote-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 4px; max-width: 520px; width: 100%; }
+.quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 68px; line-height: 0.5; margin-bottom: 14px; display: block; opacity: 0.3; transition: color 0.4s; }
+#quote-text { font-weight: 300; font-style: italic; line-height: 1.6; text-shadow: 0 1px 12px rgba(0,0,0,0.15); transition: opacity 0.35s ease, transform 0.35s ease, color 0.4s, font-size 0.3s, font-family 0.3s; }
 
-.quote-mark {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 72px;
-  line-height: 0.5;
-  color: rgba(255,255,255,0.35);
-  margin-bottom: 16px;
-  display: block;
-}
+.bottom-section { width: 100%; max-width: 520px; }
+.investor-block { text-align: center; margin-bottom: 20px; transition: opacity 0.35s ease; }
+.investor-name { font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 3px; transition: color 0.4s; }
+.investor-desc { font-size: 11px; font-weight: 300; letter-spacing: 0.06em; opacity: 0.6; transition: color 0.4s; }
 
-#quote-text {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(22px, 5.5vw, 32px);
-  font-weight: 300;
-  font-style: italic;
-  line-height: 1.55;
-  color: #ffffff;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
+.nav-dots { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 14px; }
+.dot { width: 5px; height: 5px; border-radius: 50%; transition: all 0.3s; }
+.dot.active { width: 20px; border-radius: 3px; }
 
-/* Bottom section */
-.bottom-section {
-  width: 100%;
-  max-width: 520px;
-}
+.nav-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.nav-btn { width: 52px; height: 52px; border-radius: 50%; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0; border: 0.5px solid; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.nav-btn:active { transform: scale(0.92); }
+.today-btn { flex: 1; height: 52px; border-radius: 999px; font-size: 11px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; font-family: 'Jost', sans-serif; cursor: pointer; transition: all 0.2s; border: 0.5px solid; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background: transparent; }
+.today-btn:active { transform: scale(0.97); }
 
-.investor-block {
-  text-align: center;
-  margin-bottom: 28px;
-  transition: opacity 0.4s ease;
-}
-.investor-name {
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.95);
-  margin-bottom: 4px;
-}
-.investor-desc {
-  font-size: 12px;
-  font-weight: 300;
-  letter-spacing: 0.06em;
-  color: rgba(255,255,255,0.55);
-}
-.india-flag {
-  font-size: 14px;
-  margin-right: 6px;
-}
+.fading { opacity: 0 !important; transform: translateY(8px) !important; }
 
-/* Navigation dots */
-.nav-dots {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-.dot {
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.3);
-  transition: all 0.3s;
-  cursor: pointer;
-}
-.dot.active {
-  width: 20px;
-  border-radius: 3px;
-  background: rgba(255,255,255,0.9);
-}
+/* ===== SETTINGS PANEL ===== */
+#settings-panel { position: fixed; inset: 0; z-index: 100; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+#settings-panel.open { opacity: 1; pointer-events: all; }
+.settings-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+.settings-sheet { position: relative; z-index: 2; width: 100%; max-width: 520px; background: rgba(14,14,18,0.97); border-radius: 24px 24px 0 0; border-top: 0.5px solid rgba(255,255,255,0.1); padding: 0 0 env(safe-area-inset-bottom, 20px); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.34,1.4,0.64,1); max-height: 90vh; overflow-y: auto; }
+#settings-panel.open .settings-sheet { transform: translateY(0); }
+.sheet-handle { width: 36px; height: 4px; background: rgba(255,255,255,0.18); border-radius: 2px; margin: 14px auto 0; }
+.sheet-title { font-size: 16px; font-weight: 400; color: #fff; letter-spacing: 0.06em; text-align: center; padding: 14px 24px 0; }
+.sheet-divider { height: 0.5px; background: rgba(255,255,255,0.1); margin: 16px 24px 0; }
+.setting-section { padding: 16px 24px 0; }
+.setting-label { font-size: 10px; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.38); margin-bottom: 11px; }
 
-/* Prev / Next nav */
-.nav-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-.nav-btn {
-  width: 52px; height: 52px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.12);
-  border: 0.5px solid rgba(255,255,255,0.25);
-  color: rgba(255,255,255,0.9);
-  font-size: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  flex-shrink: 0;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-.nav-btn:active { transform: scale(0.93); background: rgba(255,255,255,0.2); }
+/* Font size */
+.size-row { display: flex; gap: 10px; }
+.size-option { flex: 1; height: 54px; border-radius: 14px; background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; transition: all 0.2s; }
+.size-option.active { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.45); color: #fff; }
+.size-option:active { transform: scale(0.95); }
+.size-preview { font-style: italic; line-height: 1; }
+.size-lbl { font-size: 9px; letter-spacing: 0.08em; color: rgba(255,255,255,0.35); }
+.size-option.active .size-lbl { color: rgba(255,255,255,0.55); }
 
-.today-btn {
-  flex: 1;
-  height: 52px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.12);
-  border: 0.5px solid rgba(255,255,255,0.25);
-  color: rgba(255,255,255,0.9);
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-family: 'Jost', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-.today-btn:active { transform: scale(0.97); background: rgba(255,255,255,0.22); }
+/* Font type */
+.font-grid { display: flex; flex-direction: column; gap: 7px; }
+.font-option { height: 56px; border-radius: 14px; padding: 0 16px; background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.65); cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s; }
+.font-option.active { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.45); color: #fff; }
+.font-option:active { transform: scale(0.98); }
+.font-meta { display: flex; flex-direction: column; gap: 2px; }
+.font-sample { font-size: 17px; font-style: italic; }
+.font-name-lbl { font-size: 9px; letter-spacing: 0.08em; color: rgba(255,255,255,0.3); }
+.font-option.active .font-name-lbl { color: rgba(255,255,255,0.5); }
+.check-icon { font-size: 14px; color: rgba(255,255,255,0.8); opacity: 0; transition: opacity 0.2s; }
+.font-option.active .check-icon { opacity: 1; }
 
-/* Filter chips row */
-.filter-row {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin-bottom: 16px;
-  flex-wrap: nowrap;
-}
-.chip {
-  font-size: 11px;
-  font-weight: 300;
-  letter-spacing: 0.08em;
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 0.5px solid rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.65);
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-  font-family: 'Jost', sans-serif;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-.chip.active {
-  background: rgba(255,255,255,0.22);
-  border-color: rgba(255,255,255,0.6);
-  color: #fff;
-}
+/* Background */
+.bg-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+.bg-swatch { flex: 1; min-width: calc(20% - 8px); height: 64px; border-radius: 14px; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+.bg-swatch.active { border-color: rgba(255,255,255,0.9); }
+.bg-swatch:active { transform: scale(0.94); }
+.bg-swatch-label { position: absolute; bottom: 4px; left: 0; right: 0; text-align: center; font-size: 8px; letter-spacing: 0.06em; color: rgba(255,255,255,0.7); text-transform: uppercase; }
+.bg-swatch-check { position: absolute; top: 4px; right: 5px; font-size: 11px; color: #fff; opacity: 0; }
+.bg-swatch.active .bg-swatch-check { opacity: 1; }
 
-/* Fade transition class */
-.fading {
-  opacity: 0 !important;
-  transform: translateY(10px) !important;
-}
+/* Font colour */
+.color-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+.color-swatch { width: 42px; height: 42px; border-radius: 50%; cursor: pointer; border: 2.5px solid transparent; transition: all 0.2s; position: relative; display: flex; align-items: center; justify-content: center; }
+.color-swatch.active { border-color: rgba(255,255,255,0.9); }
+.color-swatch:active { transform: scale(0.9); }
+.color-swatch-check { font-size: 14px; color: inherit; opacity: 0; font-weight: 600; }
+.color-swatch.active .color-swatch-check { opacity: 1; }
 
-/* Swipe hint */
-.swipe-hint {
-  position: fixed;
-  bottom: 50%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.4);
-  z-index: 3;
-  pointer-events: none;
-  transition: opacity 1s;
-}
+/* Music toggle */
+.music-row { display: flex; align-items: center; justify-content: space-between; height: 50px; }
+.music-label { font-size: 14px; color: rgba(255,255,255,0.75); }
+.toggle { width: 48px; height: 28px; border-radius: 14px; background: rgba(255,255,255,0.12); border: 0.5px solid rgba(255,255,255,0.2); cursor: pointer; position: relative; transition: background 0.3s; }
+.toggle.on { background: rgba(100,200,120,0.5); border-color: rgba(100,200,120,0.6); }
+.toggle-knob { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+.toggle.on .toggle-knob { transform: translateX(20px); }
 
-/* Day counter badge */
-.day-counter {
-  position: fixed;
-  top: env(safe-area-inset-top, 48px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  pointer-events: none;
-}
+.sheet-done-btn { margin: 18px 24px 6px; width: calc(100% - 48px); height: 50px; border-radius: 999px; background: rgba(255,255,255,0.09); border: 0.5px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.8); font-size: 13px; letter-spacing: 0.1em; font-family: 'Jost', sans-serif; cursor: pointer; transition: all 0.2s; }
+.sheet-done-btn:active { background: rgba(255,255,255,0.18); transform: scale(0.98); }
 </style>
 </head>
 <body>
-
 <div id="bg"></div>
 <div id="overlay"></div>
 
 <div id="app">
-
-  <!-- Top bar -->
   <div class="top-bar">
-    <div class="app-name">Investor Wisdom</div>
-    <div class="date-pill" id="date-pill">—</div>
+    <div class="app-name" id="app-name">Investor Wisdom</div>
+    <div class="top-right">
+      <div class="date-pill" id="date-pill">—</div>
+      <div class="settings-btn" id="settings-open-btn">⚙</div>
+    </div>
   </div>
 
-  <!-- Quote -->
   <div class="quote-area">
-    <span class="quote-mark">"</span>
+    <span class="quote-mark" id="quote-mark">"</span>
     <div id="quote-text">Loading today's wisdom...</div>
   </div>
 
-  <!-- Bottom -->
   <div class="bottom-section">
-
     <div class="investor-block" id="investor-block">
       <div class="investor-name" id="investor-name">—</div>
       <div class="investor-desc" id="investor-desc">—</div>
     </div>
-
-    <div class="filter-row">
-      <div class="chip active" data-filter="all">All investors</div>
-      <div class="chip" data-filter="india">🇮🇳 Indian</div>
-      <div class="chip" data-filter="global">🌐 Global</div>
-    </div>
-
     <div class="nav-dots" id="nav-dots">
-      <div class="dot active"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+      <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
     </div>
-
     <div class="nav-row">
       <button class="nav-btn" id="btn-prev">&#8592;</button>
       <button class="today-btn" id="btn-today">Today</button>
       <button class="nav-btn" id="btn-next">&#8594;</button>
     </div>
+  </div>
+</div>
 
+<!-- SETTINGS -->
+<div id="settings-panel">
+  <div class="settings-backdrop" id="settings-backdrop"></div>
+  <div class="settings-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Appearance</div>
+
+    <div class="sheet-divider"></div>
+    <div class="setting-section">
+      <div class="setting-label">Font Size</div>
+      <div class="size-row">
+        <div class="size-option" data-size="small"><div class="size-preview" style="font-size:17px;font-style:italic">Aa</div><div class="size-lbl">Small</div></div>
+        <div class="size-option active" data-size="medium"><div class="size-preview" style="font-size:23px;font-style:italic">Aa</div><div class="size-lbl">Medium</div></div>
+        <div class="size-option" data-size="large"><div class="size-preview" style="font-size:30px;font-style:italic">Aa</div><div class="size-lbl">Large</div></div>
+      </div>
+    </div>
+
+    <div class="sheet-divider"></div>
+    <div class="setting-section">
+      <div class="setting-label">Font Style</div>
+      <div class="font-grid">
+        <div class="font-option active" data-font="Cormorant Garamond">
+          <div class="font-meta"><div class="font-sample" style="font-family:'Cormorant Garamond',serif">The wise investor waits.</div><div class="font-name-lbl">Cormorant Garamond</div></div>
+          <span class="check-icon">✓</span>
+        </div>
+        <div class="font-option" data-font="Playfair Display">
+          <div class="font-meta"><div class="font-sample" style="font-family:'Playfair Display',serif">The wise investor waits.</div><div class="font-name-lbl">Playfair Display</div></div>
+          <span class="check-icon">✓</span>
+        </div>
+        <div class="font-option" data-font="Lora">
+          <div class="font-meta"><div class="font-sample" style="font-family:'Lora',serif">The wise investor waits.</div><div class="font-name-lbl">Lora</div></div>
+          <span class="check-icon">✓</span>
+        </div>
+        <div class="font-option" data-font="Merriweather">
+          <div class="font-meta"><div class="font-sample" style="font-family:'Merriweather',serif">The wise investor waits.</div><div class="font-name-lbl">Merriweather</div></div>
+          <span class="check-icon">✓</span>
+        </div>
+        <div class="font-option" data-font="EB Garamond">
+          <div class="font-meta"><div class="font-sample" style="font-family:'EB Garamond',serif">The wise investor waits.</div><div class="font-name-lbl">EB Garamond</div></div>
+          <span class="check-icon">✓</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sheet-divider"></div>
+    <div class="setting-section">
+      <div class="setting-label">Font Colour</div>
+      <div class="color-grid" id="color-grid">
+        <div class="color-swatch active" data-color="#ffffff" style="background:#ffffff"><span class="color-swatch-check" style="color:#333">✓</span></div>
+        <div class="color-swatch" data-color="#f5e6c8" style="background:#f5e6c8"><span class="color-swatch-check" style="color:#555">✓</span></div>
+        <div class="color-swatch" data-color="#d4e8f0" style="background:#d4e8f0"><span class="color-swatch-check" style="color:#333">✓</span></div>
+        <div class="color-swatch" data-color="#c8f0d4" style="background:#c8f0d4"><span class="color-swatch-check" style="color:#333">✓</span></div>
+        <div class="color-swatch" data-color="#f0d4e8" style="background:#f0d4e8"><span class="color-swatch-check" style="color:#333">✓</span></div>
+        <div class="color-swatch" data-color="#ffd700" style="background:#ffd700"><span class="color-swatch-check" style="color:#333">✓</span></div>
+        <div class="color-swatch" data-color="#222222" style="background:#222222; border: 1px solid rgba(255,255,255,0.2)"><span class="color-swatch-check" style="color:#fff">✓</span></div>
+      </div>
+    </div>
+
+    <div class="sheet-divider"></div>
+    <div class="setting-section">
+      <div class="setting-label">Background Theme</div>
+      <div class="bg-grid">
+        <div class="bg-swatch active" data-bg="auto" style="background:linear-gradient(135deg,#1a1a2e,#0f3460)"><div class="bg-swatch-label">Auto</div><span class="bg-swatch-check">✓</span></div>
+        <div class="bg-swatch" data-bg="midnight" style="background:linear-gradient(135deg,#0a0a0f,#111128)"><div class="bg-swatch-label">Night</div><span class="bg-swatch-check">✓</span></div>
+        <div class="bg-swatch" data-bg="forest" style="background:linear-gradient(135deg,#0a1a0a,#0d2d0d)"><div class="bg-swatch-label">Forest</div><span class="bg-swatch-check">✓</span></div>
+        <div class="bg-swatch" data-bg="ember" style="background:linear-gradient(135deg,#1a0500,#2d0a00)"><div class="bg-swatch-label">Ember</div><span class="bg-swatch-check">✓</span></div>
+        <div class="bg-swatch" data-bg="ocean" style="background:linear-gradient(135deg,#001020,#002040)"><div class="bg-swatch-label">Ocean</div><span class="bg-swatch-check">✓</span></div>
+        <div class="bg-swatch" data-bg="dawn" style="background:linear-gradient(135deg,#f8f4ef,#e8ddd0)"><div class="bg-swatch-label" style="color:rgba(0,0,0,0.5)">Dawn</div><span class="bg-swatch-check" style="color:#333">✓</span></div>
+        <div class="bg-swatch" data-bg="parchment" style="background:linear-gradient(135deg,#fdf6e3,#f5e6c8)"><div class="bg-swatch-label" style="color:rgba(0,0,0,0.5)">Parchment</div><span class="bg-swatch-check" style="color:#333">✓</span></div>
+        <div class="bg-swatch" data-bg="mist" style="background:linear-gradient(135deg,#e8f0f5,#d0e4f0)"><div class="bg-swatch-label" style="color:rgba(0,0,0,0.5)">Mist</div><span class="bg-swatch-check" style="color:#333">✓</span></div>
+        <div class="bg-swatch" data-bg="sage" style="background:linear-gradient(135deg,#eaf0e8,#d4e8d0)"><div class="bg-swatch-label" style="color:rgba(0,0,0,0.5)">Sage</div><span class="bg-swatch-check" style="color:#333">✓</span></div>
+        <div class="bg-swatch" data-bg="blush" style="background:linear-gradient(135deg,#f5e8f0,#edd0e4)"><div class="bg-swatch-label" style="color:rgba(0,0,0,0.5)">Blush</div><span class="bg-swatch-check" style="color:#333">✓</span></div>
+      </div>
+    </div>
+
+    <div class="sheet-divider"></div>
+    <div class="setting-section">
+      <div class="setting-label">Sound</div>
+      <div class="music-row">
+        <div class="music-label">Play sound on navigation</div>
+        <div class="toggle on" id="music-toggle"><div class="toggle-knob"></div></div>
+      </div>
+    </div>
+
+    <button class="sheet-done-btn" id="settings-close-btn">Done</button>
   </div>
 </div>
 
 <script>
 const quotes = [
-  {q:"The stock market is a device for transferring money from the impatient to the patient.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)"},
-  {q:"Risk comes from not knowing what you're doing.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#0d0d0d 0%,#1a0a00 50%,#2d1500 100%)"},
-  {q:"Price is what you pay. Value is what you get.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#0a0a1a 0%,#0d1f3c 50%,#1a3a6e 100%)"},
-  {q:"Be fearful when others are greedy and greedy when others are fearful.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#1a0a0a 0%,#2d1010 50%,#1a0505 100%)"},
-  {q:"Our favorite holding period is forever.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#0a1a0a 0%,#0d2d0d 50%,#061a06 100%)"},
-  {q:"In the short run, the market is a voting machine; in the long run, it is a weighing machine.",i:"Benjamin Graham",d:"Father of value investing",o:"global",bg:"linear-gradient(135deg,#1a1200 0%,#2d2000 50%,#1a1200 100%)"},
-  {q:"The intelligent investor is a realist who sells to optimists and buys from pessimists.",i:"Benjamin Graham",d:"Father of value investing",o:"global",bg:"linear-gradient(135deg,#0d0020 0%,#1a0040 50%,#0d0020 100%)"},
-  {q:"To achieve satisfactory investment results is easier than most people realize; to achieve superior results is harder than it looks.",i:"Benjamin Graham",d:"Father of value investing",o:"global",bg:"linear-gradient(135deg,#00101a 0%,#002030 50%,#003040 100%)"},
-  {q:"An investment operation is one which, upon thorough analysis, promises safety of principal and an adequate return.",i:"Benjamin Graham",d:"Father of value investing",o:"global",bg:"linear-gradient(135deg,#101010 0%,#1a1a2a 50%,#101020 100%)"},
-  {q:"The market is there only as a reference point to see if anybody is offering to do something foolish.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#0a0a0a 0%,#1a1010 50%,#2a1515 100%)"},
-  {q:"All I want to know is where I'm going to die, so I'll never go there.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#0f0f20 0%,#1a1a35 50%,#252545 100%)"},
-  {q:"Invert, always invert.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#1a0f00 0%,#2d1a00 50%,#1a0f00 100%)"},
-  {q:"The best thing a human being can do is to help another human being know more.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#001a10 0%,#002d1a 50%,#001a10 100%)"},
-  {q:"It's not supposed to be easy. Anyone who finds it easy is stupid.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#1a1a00 0%,#2d2d00 50%,#1a1a00 100%)"},
-  {q:"Know what you own and know why you own it.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",o:"global",bg:"linear-gradient(135deg,#001020 0%,#002040 50%,#003060 100%)"},
-  {q:"The real key to making money in stocks is not to get scared out of them.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",o:"global",bg:"linear-gradient(135deg,#100010 0%,#200030 50%,#100020 100%)"},
-  {q:"Behind every stock is a company. Find out what it's doing.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",o:"global",bg:"linear-gradient(135deg,#0a1a10 0%,#102a1a 50%,#0a1a10 100%)"},
-  {q:"Never invest in any idea you can't illustrate with a crayon.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",o:"global",bg:"linear-gradient(135deg,#1a1000 0%,#2a1800 50%,#1a1000 100%)"},
-  {q:"The four most dangerous words in investing are: 'this time it's different'.",i:"John Templeton",d:"Pioneer of global investing",o:"global",bg:"linear-gradient(135deg,#1a0005 0%,#2d0010 50%,#1a0005 100%)"},
-  {q:"Bull markets are born on pessimism, grow on skepticism, mature on optimism and die on euphoria.",i:"John Templeton",d:"Pioneer of global investing",o:"global",bg:"linear-gradient(135deg,#000f1a 0%,#001a2d 50%,#002040 100%)"},
-  {q:"The time of maximum pessimism is the best time to buy.",i:"John Templeton",d:"Pioneer of global investing",o:"global",bg:"linear-gradient(135deg,#100a00 0%,#1a1000 50%,#2a1a00 100%)"},
-  {q:"It is impossible to produce superior performance unless you do something different from the majority.",i:"John Templeton",d:"Pioneer of global investing",o:"global",bg:"linear-gradient(135deg,#0a001a 0%,#10002d 50%,#0a0020 100%)"},
-  {q:"The biggest risk of all is not taking one.",i:"Mellody Hobson",d:"Co-CEO, Ariel Investments",o:"global",bg:"linear-gradient(135deg,#001a1a 0%,#002d2d 50%,#001a1a 100%)"},
-  {q:"I made my money by selling too soon.",i:"Bernard Baruch",d:"American financier",o:"global",bg:"linear-gradient(135deg,#0f0f0f 0%,#1a1a1a 50%,#252525 100%)"},
-  {q:"Markets are never wrong — opinions often are.",i:"Jesse Livermore",d:"Wall Street speculator",o:"global",bg:"linear-gradient(135deg,#1a0a00 0%,#2d1500 50%,#3d2000 100%)"},
-  {q:"The trend is your friend until the end when it bends.",i:"Ed Seykota",d:"Commodities trader",o:"global",bg:"linear-gradient(135deg,#001a0a 0%,#002d10 50%,#003d1a 100%)"},
-  {q:"Cut your losses and let your winners run.",i:"Ed Seykota",d:"Commodities trader",o:"global",bg:"linear-gradient(135deg,#1a0000 0%,#2d0000 50%,#1a0000 100%)"},
-  {q:"Win or lose, everybody gets what they want out of the market.",i:"Ed Seykota",d:"Commodities trader",o:"global",bg:"linear-gradient(135deg,#000a1a 0%,#00102d 50%,#001a3d 100%)"},
-  {q:"Diversification is protection against ignorance. It makes little sense if you know what you are doing.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#0a0a1a 0%,#10102d 50%,#1a1a3d 100%)"},
-  {q:"The stock market is filled with individuals who know the price of everything, but the value of nothing.",i:"Philip Fisher",d:"Author, Common Stocks and Uncommon Profits",o:"global",bg:"linear-gradient(135deg,#1a1000 0%,#2d1a00 50%,#1a1000 100%)"},
-  {q:"Successful investing is about managing risk, not avoiding it.",i:"Benjamin Graham",d:"Father of value investing",o:"global",bg:"linear-gradient(135deg,#001010 0%,#002020 50%,#003030 100%)"},
-  {q:"The most important quality for an investor is temperament, not intellect.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#100010 0%,#1a001a 50%,#250025 100%)"},
-  {q:"An investment in knowledge pays the best interest.",i:"Benjamin Franklin",d:"Founding Father & investor",o:"global",bg:"linear-gradient(135deg,#0a1000 0%,#101a00 50%,#1a2500 100%)"},
-  {q:"Compound interest is the eighth wonder of the world.",i:"Albert Einstein",d:"Physicist & thinker",o:"global",bg:"linear-gradient(135deg,#00101a 0%,#001a2d 50%,#002040 100%)"},
-  {q:"The best investment you can make is in yourself.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#1a0a0a 0%,#2d1010 50%,#1a0a0a 100%)"},
-  {q:"If you aren't willing to own a stock for ten years, don't even think about owning it for ten minutes.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#001a05 0%,#002d10 50%,#001a05 100%)"},
-  {q:"Time in the market beats timing the market.",i:"Ken Fisher",d:"Founder, Fisher Investments",o:"global",bg:"linear-gradient(135deg,#10000a 0%,#1a001a 50%,#25002d 100%)"},
-  {q:"Don't look for the needle in the haystack. Just buy the haystack.",i:"Jack Bogle",d:"Founder, Vanguard Group",o:"global",bg:"linear-gradient(135deg,#0a0a00 0%,#1a1a00 50%,#2a2a00 100%)"},
-  {q:"In investing, what is comfortable is rarely profitable.",i:"Robert Arnott",d:"Founder, Research Affiliates",o:"global",bg:"linear-gradient(135deg,#1a001a 0%,#2d002d 50%,#1a001a 100%)"},
-  {q:"Markets can remain irrational longer than you can remain solvent.",i:"John Maynard Keynes",d:"Economist",o:"global",bg:"linear-gradient(135deg,#001a1a 0%,#002d2d 50%,#003d3d 100%)"},
-  {q:"It's not whether you're right or wrong, but how much money you make when you're right.",i:"George Soros",d:"Founder, Quantum Fund",o:"global",bg:"linear-gradient(135deg,#0a0010 0%,#100020 50%,#1a0035 100%)"},
-  {q:"If investing is entertaining, if you're having fun, you're probably not making any money.",i:"George Soros",d:"Founder, Quantum Fund",o:"global",bg:"linear-gradient(135deg,#101000 0%,#1a1a00 50%,#252500 100%)"},
-  {q:"The way to make money is to buy when blood is running in the streets.",i:"John D. Rockefeller",d:"Standard Oil founder",o:"global",bg:"linear-gradient(135deg,#1a0000 0%,#2d0000 50%,#3d0505 100%)"},
-  {q:"Opportunities come infrequently. When it rains gold, put out the bucket, not the thimble.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#001020 0%,#002035 50%,#00304d 100%)"},
-  {q:"Someone's sitting in the shade today because someone planted a tree a long time ago.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#001500 0%,#002500 50%,#003500 100%)"},
-  {q:"It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#0a0020 0%,#10003d 50%,#1a0050 100%)"},
-  {q:"You don't need to be a rocket scientist. Investing is not a game where the guy with the 160 IQ beats the guy with 130 IQ.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#1a1000 0%,#2d1a05 50%,#1a1000 100%)"},
-  {q:"The most contrarian thing of all is not to oppose the crowd but to think for yourself.",i:"Peter Thiel",d:"Co-founder, PayPal",o:"global",bg:"linear-gradient(135deg,#00001a 0%,#00002d 50%,#000040 100%)"},
-  {q:"You have to be willing to hold a position for months or years and watch it go down significantly before it goes up.",i:"Seth Klarman",d:"Founder, Baupost Group",o:"global",bg:"linear-gradient(135deg,#100500 0%,#1a0a00 50%,#251000 100%)"},
-  {q:"The biggest mistake investors make is to believe that what happened in the recent past is likely to persist.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",o:"global",bg:"linear-gradient(135deg,#001010 0%,#002020 50%,#00302d 100%)"},
-  {q:"Pain plus reflection equals progress.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",o:"global",bg:"linear-gradient(135deg,#1a0a00 0%,#2d1500 50%,#1a0a00 100%)"},
-  {q:"Embrace reality and deal with it.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",o:"global",bg:"linear-gradient(135deg,#000a1a 0%,#00102d 50%,#001540 100%)"},
-  {q:"Think for yourself while being radically open-minded.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",o:"global",bg:"linear-gradient(135deg,#0a001a 0%,#10002d 50%,#1a0040 100%)"},
-  {q:"Markets have never been driven by logic alone.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",o:"global",bg:"linear-gradient(135deg,#101010 0%,#1a1a10 50%,#252515 100%)"},
-  {q:"You can't predict. You can prepare.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",o:"global",bg:"linear-gradient(135deg,#001a10 0%,#002d1a 50%,#003d25 100%)"},
-  {q:"Being too far ahead of your time is indistinguishable from being wrong.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",o:"global",bg:"linear-gradient(135deg,#1a1a00 0%,#2d2d05 50%,#1a1a00 100%)"},
-  {q:"Good times teach only bad lessons — that investing is easy, that you know its secrets, and that you needn't worry about risk.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",o:"global",bg:"linear-gradient(135deg,#1a000a 0%,#2d0010 50%,#1a000a 100%)"},
-  {q:"In investing, you get what you don't pay for.",i:"Jack Bogle",d:"Founder, Vanguard Group",o:"global",bg:"linear-gradient(135deg,#00101a 0%,#00152d 50%,#001a40 100%)"},
-  {q:"Stay the course. No matter what happens, stick to your program.",i:"Jack Bogle",d:"Founder, Vanguard Group",o:"global",bg:"linear-gradient(135deg,#0a0a00 0%,#151500 50%,#202000 100%)"},
-  {q:"Time is your friend; impulse is your enemy.",i:"Jack Bogle",d:"Founder, Vanguard Group",o:"global",bg:"linear-gradient(135deg,#001a00 0%,#002d00 50%,#003d00 100%)"},
-  {q:"Rule No. 1: Never lose money. Rule No. 2: Never forget Rule No. 1.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#1a0000 0%,#2d0000 50%,#3d0000 100%)"},
-  {q:"If you don't find a way to make money while you sleep, you will work until you die.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#00001a 0%,#00002d 50%,#000040 100%)"},
-  {q:"The philosophy of the rich: invest money first, spend what is left.",i:"Robert Kiyosaki",d:"Author, Rich Dad Poor Dad",o:"global",bg:"linear-gradient(135deg,#0a1000 0%,#152000 50%,#1a2d00 100%)"},
-  {q:"Financial freedom is available to those who learn about it and work for it.",i:"Robert Kiyosaki",d:"Author, Rich Dad Poor Dad",o:"global",bg:"linear-gradient(135deg,#100a00 0%,#1a1000 50%,#251500 100%)"},
-  {q:"The best time to plant a tree was 20 years ago. The second best time is now.",i:"Chinese Proverb",d:"Timeless wisdom",o:"global",bg:"linear-gradient(135deg,#001010 0%,#002020 50%,#003030 100%)"},
-  {q:"A penny saved is a penny earned.",i:"Benjamin Franklin",d:"Founding Father & investor",o:"global",bg:"linear-gradient(135deg,#10100a 0%,#1a1a10 50%,#25251a 100%)"},
-  {q:"The way to wealth is plain as the way to market. It depends chiefly on industry and frugality.",i:"Benjamin Franklin",d:"Founding Father & investor",o:"global",bg:"linear-gradient(135deg,#0a0a1a 0%,#101025 50%,#1a1a30 100%)"},
-  {q:"The most powerful force in the universe is compound interest.",i:"Albert Einstein",d:"Physicist & thinker",o:"global",bg:"linear-gradient(135deg,#001a1a 0%,#002525 50%,#003535 100%)"},
-  {q:"Spend each day trying to be a little wiser than you were when you woke up.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#0a001a 0%,#150025 50%,#200030 100%)"},
-  {q:"Don't let the fear of losing be greater than the excitement of winning.",i:"Robert Kiyosaki",d:"Author, Rich Dad Poor Dad",o:"global",bg:"linear-gradient(135deg,#1a0a00 0%,#2d1500 50%,#3d2000 100%)"},
-  {q:"You only have to do a very few things right in your life so long as you don't do too many things wrong.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#001a05 0%,#002510 50%,#00301a 100%)"},
-  {q:"Formal education will make you a living; self-education will make you a fortune.",i:"Jim Rohn",d:"Entrepreneur & author",o:"global",bg:"linear-gradient(135deg,#0f0005 0%,#1a000a 50%,#250010 100%)"},
-  {q:"The investor's chief problem — even his worst enemy — is likely to be himself.",i:"Benjamin Graham",d:"Father of value investing",o:"global",bg:"linear-gradient(135deg,#1a1500 0%,#2d2200 50%,#1a1500 100%)"},
-  {q:"Success in investing doesn't correlate with IQ. What you need is the temperament to control the urges that get other people into trouble.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",o:"global",bg:"linear-gradient(135deg,#00001a 0%,#000025 50%,#000035 100%)"},
-  {q:"The single greatest edge an investor can have is a long-term orientation.",i:"Seth Klarman",d:"Founder, Baupost Group",o:"global",bg:"linear-gradient(135deg,#001a0a 0%,#002d15 50%,#001a0a 100%)"},
-  {q:"Investing requires a lot of delayed gratification.",i:"Li Lu",d:"Founder, Himalaya Capital",o:"global",bg:"linear-gradient(135deg,#100010 0%,#1a001a 50%,#250025 100%)"},
-  {q:"There is no free lunch in investing.",i:"Milton Friedman",d:"Nobel laureate economist",o:"global",bg:"linear-gradient(135deg,#0a0a0a 0%,#141414 50%,#1e1e1e 100%)"},
-  {q:"Wealth is the ability to fully experience life.",i:"Henry David Thoreau",d:"Author & philosopher",o:"global",bg:"linear-gradient(135deg,#001510 0%,#00251a 50%,#003020 100%)"},
-  {q:"Vision without execution is hallucination.",i:"Thomas Edison",d:"Inventor & entrepreneur",o:"global",bg:"linear-gradient(135deg,#1a0500 0%,#2d0a00 50%,#1a0500 100%)"},
-  {q:"High returns are not the result of taking more risk, but of avoiding unnecessary risk.",i:"Bruce Greenwald",d:"Professor, Columbia Business School",o:"global",bg:"linear-gradient(135deg,#00101a 0%,#001a2d 50%,#002040 100%)"},
-  {q:"Equities are the only asset class that has consistently beaten inflation over time.",i:"Jeremy Siegel",d:"Author, Stocks for the Long Run",o:"global",bg:"linear-gradient(135deg,#0a1a00 0%,#152d00 50%,#0a1a00 100%)"},
-  {q:"October is one of the peculiarly dangerous months to speculate in stocks.",i:"Mark Twain",d:"Author & humorist",o:"global",bg:"linear-gradient(135deg,#1a0a0a 0%,#2d1010 50%,#1a0505 100%)"},
-  {q:"The markets are unforgiving, and emotional trading always results in losses.",i:"Alexander Elder",d:"Author, Trading for a Living",o:"global",bg:"linear-gradient(135deg,#000a1a 0%,#001020 50%,#001a30 100%)"},
-  {q:"The courage to be concentrated is what differentiates the great investors.",i:"Bruce Berkowitz",d:"Founder, Fairholme Fund",o:"global",bg:"linear-gradient(135deg,#1a001a 0%,#2d002d 50%,#3d003d 100%)"},
-  {q:"Good things happen to those who hustle.",i:"Anaïs Nin",d:"Author",o:"global",bg:"linear-gradient(135deg,#001a00 0%,#003000 50%,#004500 100%)"},
-  {q:"Money grows on the tree of persistence.",i:"Japanese Proverb",d:"Timeless wisdom",o:"global",bg:"linear-gradient(135deg,#1a1000 0%,#2d1a00 50%,#1a1000 100%)"},
+  {q:"The stock market is a device for transferring money from the impatient to the patient.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)"},
+  {q:"Risk comes from not knowing what you're doing.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#0d0d0d 0%,#1a0a00 50%,#2d1500 100%)"},
+  {q:"Price is what you pay. Value is what you get.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#0a0a1a 0%,#0d1f3c 50%,#1a3a6e 100%)"},
+  {q:"Be fearful when others are greedy and greedy when others are fearful.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#1a0a0a 0%,#2d1010 50%,#1a0505 100%)"},
+  {q:"Our favorite holding period is forever.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#0a1a0a 0%,#0d2d0d 50%,#061a06 100%)"},
+  {q:"In the short run, the market is a voting machine; in the long run, it is a weighing machine.",i:"Benjamin Graham",d:"Father of value investing",bg:"linear-gradient(135deg,#1a1200 0%,#2d2000 50%,#1a1200 100%)"},
+  {q:"The intelligent investor is a realist who sells to optimists and buys from pessimists.",i:"Benjamin Graham",d:"Father of value investing",bg:"linear-gradient(135deg,#0d0020 0%,#1a0040 50%,#0d0020 100%)"},
+  {q:"To achieve satisfactory investment results is easier than most people realize; to achieve superior results is harder than it looks.",i:"Benjamin Graham",d:"Father of value investing",bg:"linear-gradient(135deg,#00101a 0%,#002030 50%,#003040 100%)"},
+  {q:"An investment operation is one which, upon thorough analysis, promises safety of principal and an adequate return.",i:"Benjamin Graham",d:"Father of value investing",bg:"linear-gradient(135deg,#101010 0%,#1a1a2a 50%,#101020 100%)"},
+  {q:"The market is there only as a reference point to see if anybody is offering to do something foolish.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#0a0a0a 0%,#1a1010 50%,#2a1515 100%)"},
+  {q:"All I want to know is where I'm going to die, so I'll never go there.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#0f0f20 0%,#1a1a35 50%,#252545 100%)"},
+  {q:"Invert, always invert.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#1a0f00 0%,#2d1a00 50%,#1a0f00 100%)"},
+  {q:"The best thing a human being can do is to help another human being know more.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#001a10 0%,#002d1a 50%,#001a10 100%)"},
+  {q:"It's not supposed to be easy. Anyone who finds it easy is stupid.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#1a1a00 0%,#2d2d00 50%,#1a1a00 100%)"},
+  {q:"Spend each day trying to be a little wiser than you were when you woke up.",i:"Charlie Munger",d:"Vice Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#0a001a 0%,#150025 50%,#200030 100%)"},
+  {q:"Know what you own and know why you own it.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",bg:"linear-gradient(135deg,#001020 0%,#002040 50%,#003060 100%)"},
+  {q:"The real key to making money in stocks is not to get scared out of them.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",bg:"linear-gradient(135deg,#100010 0%,#200030 50%,#100020 100%)"},
+  {q:"Behind every stock is a company. Find out what it's doing.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",bg:"linear-gradient(135deg,#0a1a10 0%,#102a1a 50%,#0a1a10 100%)"},
+  {q:"Never invest in any idea you can't illustrate with a crayon.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",bg:"linear-gradient(135deg,#1a1000 0%,#2a1800 50%,#1a1000 100%)"},
+  {q:"The key to making money in stocks is not to get scared out of them.",i:"Peter Lynch",d:"Manager, Fidelity Magellan Fund",bg:"linear-gradient(135deg,#001520 0%,#002535 50%,#003040 100%)"},
+  {q:"The four most dangerous words in investing are: 'this time it's different'.",i:"John Templeton",d:"Pioneer of global investing",bg:"linear-gradient(135deg,#1a0005 0%,#2d0010 50%,#1a0005 100%)"},
+  {q:"Bull markets are born on pessimism, grow on skepticism, mature on optimism and die on euphoria.",i:"John Templeton",d:"Pioneer of global investing",bg:"linear-gradient(135deg,#000f1a 0%,#001a2d 50%,#002040 100%)"},
+  {q:"The time of maximum pessimism is the best time to buy.",i:"John Templeton",d:"Pioneer of global investing",bg:"linear-gradient(135deg,#100a00 0%,#1a1000 50%,#2a1a00 100%)"},
+  {q:"It is impossible to produce superior performance unless you do something different from the majority.",i:"John Templeton",d:"Pioneer of global investing",bg:"linear-gradient(135deg,#0a001a 0%,#10002d 50%,#0a0020 100%)"},
+  {q:"The biggest risk of all is not taking one.",i:"Mellody Hobson",d:"Co-CEO, Ariel Investments",bg:"linear-gradient(135deg,#001a1a 0%,#002d2d 50%,#001a1a 100%)"},
+  {q:"Markets are never wrong — opinions often are.",i:"Jesse Livermore",d:"Wall Street speculator",bg:"linear-gradient(135deg,#1a0a00 0%,#2d1500 50%,#3d2000 100%)"},
+  {q:"The trend is your friend until the end when it bends.",i:"Ed Seykota",d:"Commodities trader",bg:"linear-gradient(135deg,#001a0a 0%,#002d10 50%,#003d1a 100%)"},
+  {q:"Cut your losses and let your winners run.",i:"Ed Seykota",d:"Commodities trader",bg:"linear-gradient(135deg,#1a0000 0%,#2d0000 50%,#1a0000 100%)"},
+  {q:"Diversification is protection against ignorance. It makes little sense if you know what you are doing.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#0a0a1a 0%,#10102d 50%,#1a1a3d 100%)"},
+  {q:"The stock market is filled with individuals who know the price of everything, but the value of nothing.",i:"Philip Fisher",d:"Common Stocks and Uncommon Profits",bg:"linear-gradient(135deg,#1a1000 0%,#2d1a00 50%,#1a1000 100%)"},
+  {q:"Successful investing is about managing risk, not avoiding it.",i:"Benjamin Graham",d:"Father of value investing",bg:"linear-gradient(135deg,#001010 0%,#002020 50%,#003030 100%)"},
+  {q:"The most important quality for an investor is temperament, not intellect.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#100010 0%,#1a001a 50%,#250025 100%)"},
+  {q:"An investment in knowledge pays the best interest.",i:"Benjamin Franklin",d:"Founding Father & investor",bg:"linear-gradient(135deg,#0a1000 0%,#101a00 50%,#1a2500 100%)"},
+  {q:"Compound interest is the eighth wonder of the world. He who understands it, earns it.",i:"Albert Einstein",d:"Physicist & thinker",bg:"linear-gradient(135deg,#00101a 0%,#001a2d 50%,#002040 100%)"},
+  {q:"The best investment you can make is in yourself.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#1a0a0a 0%,#2d1010 50%,#1a0a0a 100%)"},
+  {q:"If you aren't willing to own a stock for ten years, don't even think about owning it for ten minutes.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#001a05 0%,#002d10 50%,#001a05 100%)"},
+  {q:"Time in the market beats timing the market.",i:"Ken Fisher",d:"Founder, Fisher Investments",bg:"linear-gradient(135deg,#10000a 0%,#1a001a 50%,#25002d 100%)"},
+  {q:"Don't look for the needle in the haystack. Just buy the haystack.",i:"Jack Bogle",d:"Founder, Vanguard Group",bg:"linear-gradient(135deg,#0a0a00 0%,#1a1a00 50%,#2a2a00 100%)"},
+  {q:"In investing, what is comfortable is rarely profitable.",i:"Robert Arnott",d:"Founder, Research Affiliates",bg:"linear-gradient(135deg,#1a001a 0%,#2d002d 50%,#1a001a 100%)"},
+  {q:"Markets can remain irrational longer than you can remain solvent.",i:"John Maynard Keynes",d:"Economist",bg:"linear-gradient(135deg,#001a1a 0%,#002d2d 50%,#003d3d 100%)"},
+  {q:"It's not whether you're right or wrong, but how much money you make when you're right.",i:"George Soros",d:"Founder, Quantum Fund",bg:"linear-gradient(135deg,#0a0010 0%,#100020 50%,#1a0035 100%)"},
+  {q:"If investing is entertaining, if you're having fun, you're probably not making any money.",i:"George Soros",d:"Founder, Quantum Fund",bg:"linear-gradient(135deg,#101000 0%,#1a1a00 50%,#252500 100%)"},
+  {q:"The way to make money is to buy when blood is running in the streets.",i:"John D. Rockefeller",d:"Standard Oil founder",bg:"linear-gradient(135deg,#1a0000 0%,#2d0000 50%,#3d0505 100%)"},
+  {q:"I always tried to turn every disaster into an opportunity.",i:"John D. Rockefeller",d:"Standard Oil founder",bg:"linear-gradient(135deg,#100500 0%,#1a0a00 50%,#251000 100%)"},
+  {q:"Opportunities come infrequently. When it rains gold, put out the bucket, not the thimble.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#001020 0%,#002035 50%,#00304d 100%)"},
+  {q:"Someone's sitting in the shade today because someone planted a tree a long time ago.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#001500 0%,#002500 50%,#003500 100%)"},
+  {q:"It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#0a0020 0%,#10003d 50%,#1a0050 100%)"},
+  {q:"The most contrarian thing of all is not to oppose the crowd but to think for yourself.",i:"Peter Thiel",d:"Co-founder, PayPal",bg:"linear-gradient(135deg,#00001a 0%,#00002d 50%,#000040 100%)"},
+  {q:"You have to be willing to hold a position and watch it go down significantly before it goes up.",i:"Seth Klarman",d:"Founder, Baupost Group",bg:"linear-gradient(135deg,#100500 0%,#1a0a00 50%,#251000 100%)"},
+  {q:"The biggest mistake investors make is to believe that what happened in the recent past is likely to persist.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",bg:"linear-gradient(135deg,#001010 0%,#002020 50%,#00302d 100%)"},
+  {q:"Pain plus reflection equals progress.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",bg:"linear-gradient(135deg,#1a0a00 0%,#2d1500 50%,#1a0a00 100%)"},
+  {q:"Embrace reality and deal with it.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",bg:"linear-gradient(135deg,#000a1a 0%,#00102d 50%,#001540 100%)"},
+  {q:"Think for yourself while being radically open-minded.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",bg:"linear-gradient(135deg,#0a001a 0%,#10002d 50%,#1a0040 100%)"},
+  {q:"Diversifying well is the most important thing you need to do in order to invest well.",i:"Ray Dalio",d:"Founder, Bridgewater Associates",bg:"linear-gradient(135deg,#001520 0%,#002535 50%,#003040 100%)"},
+  {q:"Markets have never been driven by logic alone.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",bg:"linear-gradient(135deg,#101010 0%,#1a1a10 50%,#252515 100%)"},
+  {q:"You can't predict. You can prepare.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",bg:"linear-gradient(135deg,#001a10 0%,#002d1a 50%,#003d25 100%)"},
+  {q:"Being too far ahead of your time is indistinguishable from being wrong.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",bg:"linear-gradient(135deg,#1a1a00 0%,#2d2d05 50%,#1a1a00 100%)"},
+  {q:"Good times teach only bad lessons — that investing is easy and you needn't worry about risk.",i:"Howard Marks",d:"Co-founder, Oaktree Capital",bg:"linear-gradient(135deg,#1a000a 0%,#2d0010 50%,#1a000a 100%)"},
+  {q:"In investing, you get what you don't pay for.",i:"Jack Bogle",d:"Founder, Vanguard Group",bg:"linear-gradient(135deg,#00101a 0%,#00152d 50%,#001a40 100%)"},
+  {q:"Stay the course. No matter what happens, stick to your program.",i:"Jack Bogle",d:"Founder, Vanguard Group",bg:"linear-gradient(135deg,#0a0a00 0%,#151500 50%,#202000 100%)"},
+  {q:"Time is your friend; impulse is your enemy.",i:"Jack Bogle",d:"Founder, Vanguard Group",bg:"linear-gradient(135deg,#001a00 0%,#002d00 50%,#003d00 100%)"},
+  {q:"Rule No. 1: Never lose money. Rule No. 2: Never forget Rule No. 1.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#1a0000 0%,#2d0000 50%,#3d0000 100%)"},
+  {q:"If you don't find a way to make money while you sleep, you will work until you die.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#00001a 0%,#00002d 50%,#000040 100%)"},
+  {q:"The philosophy of the rich: invest money first, spend what is left.",i:"Robert Kiyosaki",d:"Author, Rich Dad Poor Dad",bg:"linear-gradient(135deg,#0a1000 0%,#152000 50%,#1a2d00 100%)"},
+  {q:"Financial freedom is available to those who learn about it and work for it.",i:"Robert Kiyosaki",d:"Author, Rich Dad Poor Dad",bg:"linear-gradient(135deg,#100a00 0%,#1a1000 50%,#251500 100%)"},
+  {q:"The best time to plant a tree was 20 years ago. The second best time is now.",i:"Chinese Proverb",d:"Timeless wisdom",bg:"linear-gradient(135deg,#001010 0%,#002020 50%,#003030 100%)"},
+  {q:"A penny saved is a penny earned.",i:"Benjamin Franklin",d:"Founding Father & investor",bg:"linear-gradient(135deg,#10100a 0%,#1a1a10 50%,#25251a 100%)"},
+  {q:"The way to wealth is as plain as the way to market. It depends chiefly on industry and frugality.",i:"Benjamin Franklin",d:"Founding Father & investor",bg:"linear-gradient(135deg,#0a0a1a 0%,#101025 50%,#1a1a30 100%)"},
+  {q:"Formal education will make you a living; self-education will make you a fortune.",i:"Jim Rohn",d:"Entrepreneur & author",bg:"linear-gradient(135deg,#0f0005 0%,#1a000a 50%,#250010 100%)"},
+  {q:"The investor's chief problem — even his worst enemy — is likely to be himself.",i:"Benjamin Graham",d:"Father of value investing",bg:"linear-gradient(135deg,#1a1500 0%,#2d2200 50%,#1a1500 100%)"},
+  {q:"Success in investing doesn't correlate with IQ — what you need is the right temperament.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#00001a 0%,#000025 50%,#000035 100%)"},
+  {q:"The single greatest edge an investor can have is a long-term orientation.",i:"Seth Klarman",d:"Founder, Baupost Group",bg:"linear-gradient(135deg,#001a0a 0%,#002d15 50%,#001a0a 100%)"},
+  {q:"There is no free lunch in investing.",i:"Milton Friedman",d:"Nobel laureate economist",bg:"linear-gradient(135deg,#0a0a0a 0%,#141414 50%,#1e1e1e 100%)"},
+  {q:"Wealth is the ability to fully experience life.",i:"Henry David Thoreau",d:"Author & philosopher",bg:"linear-gradient(135deg,#001510 0%,#00251a 50%,#003020 100%)"},
+  {q:"High returns are not the result of taking more risk, but of avoiding unnecessary risk.",i:"Bruce Greenwald",d:"Columbia Business School",bg:"linear-gradient(135deg,#00101a 0%,#001a2d 50%,#002040 100%)"},
+  {q:"Equities are the only asset class that has consistently beaten inflation over time.",i:"Jeremy Siegel",d:"Stocks for the Long Run",bg:"linear-gradient(135deg,#0a1a00 0%,#152d00 50%,#0a1a00 100%)"},
+  {q:"The markets are unforgiving, and emotional trading always results in losses.",i:"Alexander Elder",d:"Trading for a Living",bg:"linear-gradient(135deg,#000a1a 0%,#001020 50%,#001a30 100%)"},
+  {q:"You only have to do a very few things right so long as you don't do too many things wrong.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#001a05 0%,#002510 50%,#00301a 100%)"},
+  {q:"Vision without execution is hallucination.",i:"Thomas Edison",d:"Inventor & entrepreneur",bg:"linear-gradient(135deg,#1a0500 0%,#2d0a00 50%,#1a0500 100%)"},
+  {q:"Money grows on the tree of persistence.",i:"Japanese Proverb",d:"Timeless wisdom",bg:"linear-gradient(135deg,#1a1000 0%,#2d1a00 50%,#1a1000 100%)"},
+  {q:"Never invest in a business you cannot understand.",i:"Warren Buffett",d:"Chairman, Berkshire Hathaway",bg:"linear-gradient(135deg,#001a1a 0%,#002d2d 50%,#001a1a 100%)"},
+  {q:"I would rather earn 1% off 100 people's efforts than 100% of my own efforts.",i:"John D. Rockefeller",d:"Standard Oil founder",bg:"linear-gradient(135deg,#0a001a 0%,#15002d 50%,#200040 100%)"},
+  {q:"The courage to be concentrated is what differentiates the great investors.",i:"Bruce Berkowitz",d:"Founder, Fairholme Fund",bg:"linear-gradient(135deg,#1a001a 0%,#2d002d 50%,#3d003d 100%)"},
+  {q:"Value investing is risk aversion.",i:"Seth Klarman",d:"Founder, Baupost Group",bg:"linear-gradient(135deg,#001020 0%,#001535 50%,#001a40 100%)"},
+  {q:"Do not be embarrassed by your failures, learn from them and start again.",i:"Richard Branson",d:"Founder, Virgin Group",bg:"linear-gradient(135deg,#001a10 0%,#002d1a 50%,#003d25 100%)"},
+  {q:"The best investment on earth is earth.",i:"Louis Glickman",d:"Real estate investor",bg:"linear-gradient(135deg,#0a1a00 0%,#152d00 50%,#0a1a00 100%)"},
+  {q:"Investing requires a lot of delayed gratification.",i:"Li Lu",d:"Founder, Himalaya Capital",bg:"linear-gradient(135deg,#100010 0%,#1a001a 50%,#250025 100%)"},
+  {q:"The most powerful force in the universe is compound interest.",i:"Albert Einstein",d:"Physicist & thinker",bg:"linear-gradient(135deg,#001a1a 0%,#002525 50%,#003535 100%)"},
+  {q:"Brilliant thinking is rare, but courage is in even shorter supply than genius.",i:"Peter Thiel",d:"Co-founder, PayPal",bg:"linear-gradient(135deg,#1a0010 0%,#2d001a 50%,#1a0010 100%)"},
+  {q:"I made my money by selling too soon.",i:"Bernard Baruch",d:"American financier",bg:"linear-gradient(135deg,#0f0f0f 0%,#1a1a1a 50%,#252525 100%)"},
+  {q:"The secret to investing is to figure out the value of something, and then pay a lot less.",i:"Joel Greenblatt",d:"Founder, Gotham Capital",bg:"linear-gradient(135deg,#001a10 0%,#002d1a 50%,#001a10 100%)"},
+  {q:"October is one of the peculiarly dangerous months to speculate in stocks.",i:"Mark Twain",d:"Author & humorist",bg:"linear-gradient(135deg,#1a0a0a 0%,#2d1010 50%,#1a0505 100%)"},
 
-  {q:"Invest in businesses that a fool can manage because eventually a fool will.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india",bg:"linear-gradient(135deg,#1a0500 0%,#2d0a00 50%,#3d1500 100%)"},
-  {q:"If you have conviction, hold on. If you are not sure, don't buy.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india",bg:"linear-gradient(135deg,#001a00 0%,#002500 50%,#003500 100%)"},
-  {q:"Markets are supreme. Don't fight them.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india",bg:"linear-gradient(135deg,#1a0000 0%,#2d0000 50%,#400505 100%)"},
-  {q:"The secret of successful investing is patience. Impatience is the enemy of wealth.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india",bg:"linear-gradient(135deg,#00001a 0%,#000030 50%,#000045 100%)"},
-  {q:"India is a great business opportunity. Bet on India's growth.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india",bg:"linear-gradient(135deg,#1a0800 0%,#2d1200 50%,#3d1800 100%)"},
-  {q:"You must have the courage to hold a position when markets go against you.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india",bg:"linear-gradient(135deg,#001010 0%,#002020 50%,#003535 100%)"},
-  {q:"Think big. Act boldly. Invest with conviction.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india",bg:"linear-gradient(135deg,#0a001a 0%,#150030 50%,#200045 100%)"},
-  {q:"Never be afraid of making mistakes; be afraid of not learning from them.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india",bg:"linear-gradient(135deg,#1a1000 0%,#2d1a00 50%,#1a1000 100%)"},
-  {q:"I buy on value and I sell on value. Simple as that.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india",bg:"linear-gradient(135deg,#001a0a 0%,#002d15 50%,#001a0a 100%)"},
-  {q:"Be a long-term investor if you want real wealth.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",o:"india",bg:"linear-gradient(135deg,#1a0a00 0%,#2d1500 50%,#3d2000 100%)"},
-  {q:"Invest in the equity of great companies and hold on for the long term.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india",bg:"linear-gradient(135deg,#001520 0%,#002030 50%,#003040 100%)"},
-  {q:"QGLP — Quality, Growth, Longevity, and Price — is the mantra for stock picking.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india",bg:"linear-gradient(135deg,#1a0010 0%,#2d001a 50%,#1a0010 100%)"},
-  {q:"Buy right and sit tight.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india",bg:"linear-gradient(135deg,#001a00 0%,#003000 50%,#004a00 100%)"},
-  {q:"Multibagger stocks are found in quality businesses with long runways.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india",bg:"linear-gradient(135deg,#10000a 0%,#200015 50%,#300020 100%)"},
-  {q:"Patience is the most underrated virtue in investing.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india",bg:"linear-gradient(135deg,#0a0a1a 0%,#101030 50%,#1a1a40 100%)"},
-  {q:"Great management is the foundation of great returns.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india",bg:"linear-gradient(135deg,#001a10 0%,#002d1a 50%,#003d25 100%)"},
-  {q:"India's consumption story will be a multi-decade wealth creator.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india",bg:"linear-gradient(135deg,#1a0800 0%,#2d1200 50%,#3a1800 100%)"},
-  {q:"Compounding is the eighth wonder — the earlier you start, the richer you get.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india",bg:"linear-gradient(135deg,#001010 0%,#001a1a 50%,#002525 100%)"},
-  {q:"Avoid debt-laden companies; they amplify risk beyond reward.",i:"Ramdeo Agrawal",d:"Co-founder, Motilal Oswal",o:"india",bg:"linear-gradient(135deg,#1a0000 0%,#2d0505 50%,#1a0000 100%)"},
-  {q:"Good businesses don't need permanent capital from the market.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india",bg:"linear-gradient(135deg,#00101a 0%,#001a2d 50%,#002040 100%)"},
-  {q:"A business that earns more than it needs to reinvest is a beautiful business.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india",bg:"linear-gradient(135deg,#001a05 0%,#002d10 50%,#003d1a 100%)"},
-  {q:"The best moats are invisible — they are built on trust, habit, and brand.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india",bg:"linear-gradient(135deg,#0a0010 0%,#10001a 50%,#1a0025 100%)"},
-  {q:"Thinking about the downside protects the upside.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india",bg:"linear-gradient(135deg,#1a1000 0%,#251800 50%,#301f00 100%)"},
-  {q:"The art of investing is the art of sitting still.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india",bg:"linear-gradient(135deg,#001015 0%,#001a20 50%,#00252d 100%)"},
-  {q:"Buy quality, pay fair price, and wait.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india",bg:"linear-gradient(135deg,#001a00 0%,#002a00 50%,#003500 100%)"},
-  {q:"Behavior is more important than knowledge in investing.",i:"Sanjay Bakshi",d:"Professor & value investor",o:"india",bg:"linear-gradient(135deg,#100010 0%,#1a0020 50%,#250030 100%)"},
-  {q:"Focus on free cash flow; everything else is accounting.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india",bg:"linear-gradient(135deg,#001a10 0%,#002520 50%,#003030 100%)"},
-  {q:"Stick to businesses you understand; leave the complex ones to others.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india",bg:"linear-gradient(135deg,#0a1500 0%,#102000 50%,#1a2d00 100%)"},
-  {q:"Great stocks are like great people — they have character that holds in tough times.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india",bg:"linear-gradient(135deg,#1a001a 0%,#2d002d 50%,#1a001a 100%)"},
-  {q:"Earnings growth is the mother of all stock returns.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india",bg:"linear-gradient(135deg,#001a00 0%,#002d05 50%,#003d0a 100%)"},
-  {q:"The market rewards conviction backed by homework.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india",bg:"linear-gradient(135deg,#1a1000 0%,#2d1800 50%,#1a1000 100%)"},
-  {q:"The best time to sell a stock is when you find a better one.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india",bg:"linear-gradient(135deg,#00001a 0%,#00002d 50%,#000040 100%)"},
-  {q:"P/E is a starting point, not an ending point, in stock analysis.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india",bg:"linear-gradient(135deg,#0a0a0a 0%,#151510 50%,#201f10 100%)"},
-  {q:"Never confuse a temporarily cheap stock with a permanently cheap business.",i:"Basant Maheshwari",d:"Founder, The Equity Desk",o:"india",bg:"linear-gradient(135deg,#1a0500 0%,#2d0a00 50%,#1a0500 100%)"},
-  {q:"Wealth creation is a marathon, not a sprint.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india",bg:"linear-gradient(135deg,#001020 0%,#001a35 50%,#002050 100%)"},
-  {q:"Focus on cash flows and management quality above all.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india",bg:"linear-gradient(135deg,#0a1a00 0%,#152d00 50%,#0a1a00 100%)"},
-  {q:"Truly great businesses are rare — hold them forever.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india",bg:"linear-gradient(135deg,#10001a 0%,#1a002d 50%,#250040 100%)"},
-  {q:"Sell only when the thesis breaks, not when the price falls.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india",bg:"linear-gradient(135deg,#1a0a00 0%,#2d1500 50%,#1a0a00 100%)"},
-  {q:"Financial discipline separates great investors from good ones.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india",bg:"linear-gradient(135deg,#00101a 0%,#001a2d 50%,#002040 100%)"},
-  {q:"Never over-leverage. Debt destroys what equity creates.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india",bg:"linear-gradient(135deg,#1a0000 0%,#2d0000 50%,#3d0505 100%)"},
-  {q:"Investing is simple but not easy.",i:"Nemish Shah",d:"Co-founder, ENAM Securities",o:"india",bg:"linear-gradient(135deg,#001a1a 0%,#002d2d 50%,#003535 100%)"},
-  {q:"Equity is the best asset class for long-term wealth creation in India.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india",bg:"linear-gradient(135deg,#001a00 0%,#002d00 50%,#003d00 100%)"},
-  {q:"Don't time the market; give time to the market.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india",bg:"linear-gradient(135deg,#1a1500 0%,#2d2200 50%,#1a1500 100%)"},
-  {q:"The best SIP you can do is into India's growth story.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india",bg:"linear-gradient(135deg,#001015 0%,#001a25 50%,#002035 100%)"},
-  {q:"Sectors in distress today are often sectors in strength tomorrow.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india",bg:"linear-gradient(135deg,#0a0010 0%,#100020 50%,#1a0030 100%)"},
-  {q:"Remain fully invested — missing the best 10 days destroys returns.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india",bg:"linear-gradient(135deg,#1a0500 0%,#2d0a00 50%,#1a0500 100%)"},
-  {q:"India's per capita income growth will fuel consumption for 30 more years.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india",bg:"linear-gradient(135deg,#001a10 0%,#002d1a 50%,#003d25 100%)"},
-  {q:"When valuations are extreme on either side, rebalance without emotion.",i:"Prashant Jain",d:"CIO, HDFC Mutual Fund (former)",o:"india",bg:"linear-gradient(135deg,#10001a 0%,#1a002d 50%,#10001a 100%)"},
-  {q:"Never underestimate the power of demographics. India's young population is its biggest economic asset.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india",bg:"linear-gradient(135deg,#1a0800 0%,#2d1200 50%,#3d1a00 100%)"},
-  {q:"Mutual funds are the common man's path to uncommon wealth.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india",bg:"linear-gradient(135deg,#001a00 0%,#002d00 50%,#004000 100%)"},
-  {q:"Don't invest in markets; invest in businesses within markets.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india",bg:"linear-gradient(135deg,#00001a 0%,#000025 50%,#000035 100%)"},
-  {q:"Overconfidence and over-leveraging are the twin destroyers of wealth.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india",bg:"linear-gradient(135deg,#1a0000 0%,#2d0000 50%,#3d0000 100%)"},
-  {q:"Asset allocation is the real return driver, not stock picking.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india",bg:"linear-gradient(135deg,#001010 0%,#002020 50%,#003030 100%)"},
-  {q:"Teach your children to save and invest — it is the greatest inheritance.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india",bg:"linear-gradient(135deg,#0a1a10 0%,#102a1a 50%,#0a1a10 100%)"},
-  {q:"Regulate your greed and your fear — both destroy portfolios equally.",i:"Nilesh Shah",d:"MD, Kotak AMC",o:"india",bg:"linear-gradient(135deg,#1a000a 0%,#2d0015 50%,#1a000a 100%)"},
-  {q:"The best businesses in India will compound wealth for generations.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india",bg:"linear-gradient(135deg,#001020 0%,#001530 50%,#001a40 100%)"},
-  {q:"Data beats opinion in investing, every single time.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india",bg:"linear-gradient(135deg,#0a1000 0%,#152000 50%,#1a2d00 100%)"},
-  {q:"Risk-adjusted returns are the only returns worth chasing.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india",bg:"linear-gradient(135deg,#1a001a 0%,#2d002d 50%,#1a001a 100%)"},
-  {q:"Ignore the noise. Focus on the signal.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india",bg:"linear-gradient(135deg,#001a10 0%,#002d1a 50%,#003d25 100%)"},
-  {q:"Never mistake a good story for a good investment.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india",bg:"linear-gradient(135deg,#1a1000 0%,#2d1a00 50%,#3d2500 100%)"},
-  {q:"Patience and process — the two pillars of lasting investment success.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india",bg:"linear-gradient(135deg,#00001a 0%,#000025 50%,#000035 100%)"},
-  {q:"Avoid stocks where management enriches itself at shareholders' expense.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india",bg:"linear-gradient(135deg,#1a0000 0%,#2d0505 50%,#1a0000 100%)"},
-  {q:"Global diversification is not optional for Indian investors anymore.",i:"Devina Mehra",d:"Founder & CIO, First Global",o:"india",bg:"linear-gradient(135deg,#001520 0%,#002030 50%,#003045 100%)"},
-  {q:"Discipline in investing is not glamorous. Neither is being wealthy.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india",bg:"linear-gradient(135deg,#0a0a1a 0%,#101025 50%,#1a1a30 100%)"},
-  {q:"Long-term investing is an act of faith in the future of the economy.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india",bg:"linear-gradient(135deg,#001a00 0%,#002d00 50%,#003d00 100%)"},
-  {q:"India's equity culture is still in its early innings.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india",bg:"linear-gradient(135deg,#1a0800 0%,#2d1200 50%,#1a0800 100%)"},
-  {q:"The Sensex at 1,00,000 is inevitable; when, nobody can say.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india",bg:"linear-gradient(135deg,#001010 0%,#001a1a 50%,#002525 100%)"},
-  {q:"Build a portfolio like you build a house — foundation first.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india",bg:"linear-gradient(135deg,#0f0010 0%,#1a0020 50%,#25002d 100%)"},
-  {q:"Every bear market in India has been an opportunity in disguise.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india",bg:"linear-gradient(135deg,#001a05 0%,#002d10 50%,#001a05 100%)"},
-  {q:"Trust the process, not the prediction.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india",bg:"linear-gradient(135deg,#1a0a00 0%,#2d1500 50%,#1a0a00 100%)"},
-  {q:"Equity wealth grows in the minds of those who can tolerate volatility.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india",bg:"linear-gradient(135deg,#001a1a 0%,#002525 50%,#003030 100%)"},
-  {q:"The journey of a thousand crores begins with one smart investment.",i:"Motilal Oswal",d:"Co-founder, Motilal Oswal Group",o:"india",bg:"linear-gradient(135deg,#0a001a 0%,#15002d 50%,#200040 100%)"},
+  {q:"Invest in businesses that a fool can manage because eventually a fool will.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",bg:"linear-gradient(135deg,#1a0500 0%,#2d0a00 50%,#3d1500 100%)"},
+  {q:"If you have conviction, hold on. If you are not sure, don't buy.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",bg:"linear-gradient(135deg,#001a00 0%,#002500 50%,#003500 100%)"},
+  {q:"Markets are supreme. Don't fight them.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",bg:"linear-gradient(135deg,#1a0000 0%,#2d0000 50%,#400505 100%)"},
+  {q:"The secret of successful investing is patience. Impatience is the enemy of wealth.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",bg:"linear-gradient(135deg,#00001a 0%,#000030 50%,#000045 100%)"},
+  {q:"India is a great business opportunity. Bet on India's growth.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",bg:"linear-gradient(135deg,#1a0800 0%,#2d1200 50%,#3d1800 100%)"},
+  {q:"You must have the courage to hold a position when markets go against you.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",bg:"linear-gradient(135deg,#001010 0%,#002020 50%,#003535 100%)"},
+  {q:"Think big. Act boldly. Invest with conviction.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",bg:"linear-gradient(135deg,#0a001a 0%,#150030 50%,#200045 100%)"},
+  {q:"Never be afraid of making mistakes; be afraid of not learning from them.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",bg:"linear-gradient(135deg,#1a1000 0%,#2d1a00 50%,#1a1000 100%)"},
+  {q:"I buy on value and I sell on value. Simple as that.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",bg:"linear-gradient(135deg,#001a0a 0%,#002d15 50%,#001a0a 100%)"},
+  {q:"Be a long-term investor if you want real wealth.",i:"Rakesh Jhunjhunwala",d:"Big Bull of India",bg:"linear-gradient(135deg,#1a0a00 0%,#2d1500 50%,#3d2000 100%)"},
+
+  {q:"You don't need a fancy office or a large team to be a great investor. You need a sound mind and the discipline to stick to your process.",i:"Radhakishan Damani",d:"Founder, DMart",bg:"linear-gradient(135deg,#001020 0%,#001a35 50%,#002050 100%)"},
+  {q:"Buy businesses that are simple, predictable, and generate consistent cash flows.",i:"Radhakishan Damani",d:"Founder, DMart",bg:"linear-gradient(135deg,#001a00 0%,#002d00 50%,#004000 100%)"},
+  {q:"Never overpay for a business no matter how good it is.",i:"Radhakishan Damani",d:"Founder, DMart",bg:"linear-gradient(135deg,#1a0000 0%,#2d0000 50%,#3d0000 100%)"},
+  {q:"Protect your downside and the upside will take care of itself.",i:"Radhakishan Damani",d:"Founder, DMart",bg:"linear-gradient(135deg,#001010 0%,#002020 50%,#003030 100%)"},
+  {q:"Patience is the most powerful weapon in an investor's arsenal.",i:"Radhakishan Damani",d:"Founder, DMart",bg:"linear-gradient(135deg,#0a0a1a 0%,#101025 50%,#1a1a30 100%)"},
+  {q:"Keep your costs low and your conviction high.",i:"Radhakishan Damani",d:"Founder, DMart",bg:"linear-gradient(135deg,#001a10 0%,#002d1a 50%,#003d25 100%)"},
+  {q:"The best businesses to own are the ones where customers keep coming back.",i:"Radhakishan Damani",d:"Founder, DMart",bg:"linear-gradient(135deg,#1a0800 0%,#2d1200 50%,#1a0800 100%)"},
 ];
 
+const fontSizes   = { small:'19px', medium:'26px', large:'34px' };
+const bgThemes = {
+  auto:      null,
+  midnight:  'linear-gradient(135deg,#0a0a0f 0%,#111128 50%,#0a0a0f 100%)',
+  forest:    'linear-gradient(135deg,#0a1a0a 0%,#0d2d0d 50%,#061806 100%)',
+  ember:     'linear-gradient(135deg,#1a0500 0%,#2d0a00 50%,#3d1500 100%)',
+  ocean:     'linear-gradient(135deg,#001020 0%,#002040 50%,#003060 100%)',
+  dawn:      'linear-gradient(135deg,#f8f4ef 0%,#ede4d8 50%,#e0d0bc 100%)',
+  parchment: 'linear-gradient(135deg,#fdf6e3 0%,#f5e6c8 50%,#ead5a8 100%)',
+  mist:      'linear-gradient(135deg,#e8f0f5 0%,#d0e4f0 50%,#b8d4e8 100%)',
+  sage:      'linear-gradient(135deg,#eaf0e8 0%,#d4e8d0 50%,#bcd8b8 100%)',
+  blush:     'linear-gradient(135deg,#f5e8f0 0%,#edd0e4 50%,#e0b8d4 100%)',
+};
+
+const lightBgs = ['dawn','parchment','mist','sage','blush'];
+
+let settings = { fontSize:'medium', fontFamily:'Cormorant Garamond', bgTheme:'auto', fontColor:'#ffffff', music:true };
+try { const s = localStorage.getItem('iw_s2'); if(s) settings = {...settings,...JSON.parse(s)}; } catch(e){}
+
+let offset = 0, isAnimating = false;
+
+// ===== AUDIO =====
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playChime(type) {
+  if (!settings.music) return;
+  try {
+    const ctx = getAudioCtx();
+    const notes = type === 'open'
+      ? [523.25, 659.25, 783.99]
+      : type === 'next'
+      ? [659.25, 783.99]
+      : [783.99, 659.25];
+
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.12);
+      gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.12);
+      gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + i * 0.12 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.12 + 0.35);
+      osc.start(ctx.currentTime + i * 0.12);
+      osc.stop(ctx.currentTime + i * 0.12 + 0.4);
+    });
+  } catch(e){}
+}
+
+function saveSettings() { try { localStorage.setItem('iw_s2', JSON.stringify(settings)); } catch(e){} }
+
+function isLight(bg) { return lightBgs.includes(bg); }
+
+function applyTheme() {
+  const light = isLight(settings.bgTheme);
+  const overlayColor = light
+    ? 'linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.15) 40%, rgba(255,255,255,0.25) 100%)'
+    : 'linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.65) 80%, rgba(0,0,0,0.78) 100%)';
+  document.getElementById('overlay').style.background = overlayColor;
+
+  const uiColor = light ? 'rgba(30,20,10,0.75)' : 'rgba(255,255,255,0.75)';
+  const uiBorder = light ? 'rgba(30,20,10,0.2)' : 'rgba(255,255,255,0.2)';
+  const uiBg     = light ? 'rgba(30,20,10,0.07)' : 'rgba(255,255,255,0.1)';
+  const dotColor = light ? 'rgba(30,20,10,0.25)' : 'rgba(255,255,255,0.3)';
+  const dotActiveColor = light ? 'rgba(30,20,10,0.8)' : 'rgba(255,255,255,0.9)';
+
+  document.getElementById('app-name').style.color = uiColor;
+  const datePill = document.getElementById('date-pill');
+  datePill.style.color = uiColor;
+  datePill.style.borderColor = uiBorder;
+  datePill.style.background = uiBg;
+
+  const settingsBtn = document.getElementById('settings-open-btn');
+  settingsBtn.style.color = uiColor;
+  settingsBtn.style.borderColor = uiBorder;
+  settingsBtn.style.background = uiBg;
+
+  document.getElementById('quote-mark').style.color = settings.fontColor;
+  const qt = document.getElementById('quote-text');
+  qt.style.color = settings.fontColor;
+  qt.style.fontSize = fontSizes[settings.fontSize];
+  qt.style.fontFamily = "'" + settings.fontFamily + "', serif";
+
+  document.getElementById('investor-name').style.color = settings.fontColor;
+  document.getElementById('investor-desc').style.color = settings.fontColor;
+
+  document.querySelectorAll('.dot').forEach(d => { d.style.background = dotColor; });
+  const activeDot = document.querySelector('.dot.active');
+  if (activeDot) activeDot.style.background = dotActiveColor;
+
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.style.color = uiColor; b.style.borderColor = uiBorder; b.style.background = uiBg;
+  });
+  const tb = document.getElementById('btn-today');
+  tb.style.color = uiColor; tb.style.borderColor = uiBorder;
+
+  document.querySelectorAll('.size-option').forEach(el => el.classList.toggle('active', el.dataset.size === settings.fontSize));
+  document.querySelectorAll('.font-option').forEach(el => el.classList.toggle('active', el.dataset.font === settings.fontFamily));
+  document.querySelectorAll('.bg-swatch').forEach(el => el.classList.toggle('active', el.dataset.bg === settings.bgTheme));
+  document.querySelectorAll('.color-swatch').forEach(el => el.classList.toggle('active', el.dataset.color === settings.fontColor));
+  document.getElementById('music-toggle').classList.toggle('on', settings.music);
+}
+
 function getDayOfYear(date) {
-  const start = new Date(date.getFullYear(), 0, 0);
-  return Math.floor((date - start) / 86400000);
-}
-function getDaysInYear(y) {
-  return ((y%4===0&&y%100!==0)||y%400===0) ? 366 : 365;
+  return Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 86400000);
 }
 
-let offset = 0;
-let filter = 'all';
-let isAnimating = false;
-
-function getFiltered() {
-  if (filter === 'india') return quotes.filter(q => q.o === 'india');
-  if (filter === 'global') return quotes.filter(q => q.o === 'global');
-  return quotes;
-}
-
-function render(dir) {
+function render(animated, dir) {
   if (isAnimating) return;
   isAnimating = true;
 
   const target = new Date();
   target.setDate(target.getDate() + offset);
   const day = getDayOfYear(target);
-  const filtered = getFiltered();
-  const idx = (day - 1) % filtered.length;
-  const entry = filtered[idx];
+  const idx = (day - 1) % quotes.length;
+  const entry = quotes[idx];
 
   const qt = document.getElementById('quote-text');
   const ib = document.getElementById('investor-block');
 
-  qt.classList.add('fading');
-  ib.classList.add('fading');
+  if (animated) { qt.classList.add('fading'); ib.classList.add('fading'); }
 
   setTimeout(() => {
-    // Update background
-    document.getElementById('bg').style.background = entry.bg;
+    const themeBg = bgThemes[settings.bgTheme];
+    document.getElementById('bg').style.background = themeBg || entry.bg;
 
-    // Update content
     qt.textContent = entry.q;
-    document.getElementById('investor-name').textContent =
-      (entry.o === 'india' ? '🇮🇳 ' : '') + entry.i;
+    document.getElementById('investor-name').textContent = entry.i;
     document.getElementById('investor-desc').textContent = entry.d;
+    document.getElementById('date-pill').textContent = target.toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'});
 
-    // Update date pill
-    const dateStr = target.toLocaleDateString('en-IN', {
-      day: 'numeric', month: 'short', year: 'numeric'
-    });
-    document.getElementById('date-pill').textContent = dateStr;
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === (idx % 5)));
 
-    // Update dots (show position mod 5)
-    const dots = document.querySelectorAll('.dot');
-    const dotPos = ((idx % 5) + 5) % 5;
-    dots.forEach((d, i) => d.classList.toggle('active', i === dotPos));
-
-    qt.classList.remove('fading');
-    ib.classList.remove('fading');
-
-    setTimeout(() => { isAnimating = false; }, 400);
-  }, 350);
+    if (animated) { qt.classList.remove('fading'); ib.classList.remove('fading'); }
+    applyTheme();
+    setTimeout(() => { isAnimating = false; }, 350);
+  }, animated ? 280 : 0);
 }
 
 // Navigation
-document.getElementById('btn-prev').addEventListener('click', () => { offset--; render('left'); });
-document.getElementById('btn-next').addEventListener('click', () => { offset++; render('right'); });
-document.getElementById('btn-today').addEventListener('click', () => { offset = 0; render('none'); });
-
-// Filter chips
-document.querySelectorAll('.chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    filter = chip.dataset.filter;
-    render('none');
-  });
-});
+document.getElementById('btn-prev').addEventListener('click', () => { offset--; playChime('prev'); render(true,'prev'); });
+document.getElementById('btn-next').addEventListener('click', () => { offset++; playChime('next'); render(true,'next'); });
+document.getElementById('btn-today').addEventListener('click', () => { offset = 0; playChime('open'); render(true,'none'); });
 
 // Keyboard
 document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowLeft') { offset--; render('left'); }
-  if (e.key === 'ArrowRight') { offset++; render('right'); }
-  if (e.key === 't' || e.key === 'T') { offset = 0; render('none'); }
+  if (e.key==='ArrowLeft')  { offset--; playChime('prev'); render(true,'prev'); }
+  if (e.key==='ArrowRight') { offset++; playChime('next'); render(true,'next'); }
+  if (e.key==='t'||e.key==='T') { offset=0; render(true,'none'); }
 });
 
-// Touch swipe
-let touchStartX = 0;
-document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive:true});
-document.addEventListener('touchend', e => {
-  const diff = touchStartX - e.changedTouches[0].clientX;
-  if (Math.abs(diff) > 60) {
-    if (diff > 0) { offset++; render('left'); }
-    else { offset--; render('right'); }
-  }
-}, {passive:true});
+// Swipe
+let tx = 0;
+document.addEventListener('touchstart', e=>{ tx=e.touches[0].clientX; },{passive:true});
+document.addEventListener('touchend', e=>{
+  const d = tx - e.changedTouches[0].clientX;
+  if(Math.abs(d)>60){ if(d>0){ offset++; playChime('next'); render(true,'next'); } else { offset--; playChime('prev'); render(true,'prev'); } }
+},{passive:true});
 
-// Initial render
-render('none');
+// Settings open/close
+function openSettings() { document.getElementById('settings-panel').classList.add('open'); }
+function closeSettings() { document.getElementById('settings-panel').classList.remove('open'); }
+document.getElementById('settings-open-btn').addEventListener('click', openSettings);
+document.getElementById('settings-close-btn').addEventListener('click', closeSettings);
+document.getElementById('settings-backdrop').addEventListener('click', closeSettings);
+
+// Font size
+document.querySelectorAll('.size-option').forEach(el => {
+  el.addEventListener('click', () => { settings.fontSize = el.dataset.size; saveSettings(); applyTheme(); });
+});
+
+// Font family
+document.querySelectorAll('.font-option').forEach(el => {
+  el.addEventListener('click', () => { settings.fontFamily = el.dataset.font; saveSettings(); applyTheme(); });
+});
+
+// Background
+document.querySelectorAll('.bg-swatch').forEach(el => {
+  el.addEventListener('click', () => {
+    settings.bgTheme = el.dataset.bg;
+    saveSettings();
+    const themeBg = bgThemes[settings.bgTheme];
+    const idx = (getDayOfYear(new Date()) - 1 + offset) % quotes.length;
+    document.getElementById('bg').style.background = themeBg || quotes[((getDayOfYear(new Date())-1+offset) % quotes.length)].bg;
+    applyTheme();
+  });
+});
+
+// Font colour
+document.querySelectorAll('.color-swatch').forEach(el => {
+  el.addEventListener('click', () => { settings.fontColor = el.dataset.color; saveSettings(); applyTheme(); });
+});
+
+// Music toggle
+document.getElementById('music-toggle').addEventListener('click', () => {
+  settings.music = !settings.music;
+  saveSettings();
+  document.getElementById('music-toggle').classList.toggle('on', settings.music);
+});
+
+// Init
+render(false, 'none');
+// Play open chime after a short delay (needs user gesture first on mobile, so tied to first touch)
+let openChimePlayed = false;
+document.addEventListener('touchstart', () => {
+  if (!openChimePlayed) { openChimePlayed = true; playChime('open'); }
+}, { once: true, passive: true });
+document.addEventListener('mousedown', () => {
+  if (!openChimePlayed) { openChimePlayed = true; playChime('open'); }
+}, { once: true });
 </script>
 </body>
 </html>
